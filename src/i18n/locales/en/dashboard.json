@@ -1,0 +1,37 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome back",
+  "kpi": {
+    "todayBookings": "Today's Bookings",
+    "upcoming": "Upcoming",
+    "cancellations": "Cancellations",
+    "activeServices": "Active Services"
+  },
+  "recentBookings": "Recent Bookings",
+  "quickActions": {
+    "title": "Quick Actions",
+    "addService": "Add Service",
+    "configureHours": "Configure Hours",
+    "viewBookings": "View Bookings"
+  },
+  "onboarding": {
+    "title": "Setup Progress",
+    "whatsappConnected": "WhatsApp Connected",
+    "presetApplied": "Preset Applied",
+    "servicesConfigured": "Services Configured",
+    "hoursConfigured": "Hours Configured",
+    "readyToGoLive": "Ready to Go Live"
+  },
+  "emptyState": {
+    "title": "No bookings yet",
+    "description": "Complete your setup to start receiving bookings through WhatsApp."
+  },
+  "table": {
+    "client": "Client",
+    "service": "Service",
+    "date": "Date",
+    "time": "Time",
+    "status": "Status",
+    "source": "Source"
+  }
+}

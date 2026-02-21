@@ -1,0 +1,223 @@
+{
+  "nav": {
+    "features": "Features",
+    "howItWorks": "How It Works",
+    "pricing": "Pricing",
+    "faq": "FAQ",
+    "login": "Log In",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "title": "Your Business on WhatsApp,",
+    "titleAccent": "Ready in Minutes",
+    "subtitle": "The plug-and-play platform that turns your WhatsApp Business into a complete booking system. No app development. No friction. Just results.",
+    "cta": "Start Free",
+    "ctaSecondary": "Book a Demo",
+    "trustedBy": "Trusted by 500+ businesses across Latin America"
+  },
+  "painPoints": {
+    "title": "Sound Familiar?",
+    "subtitle": "Running bookings through WhatsApp chats is chaos. You deserve better.",
+    "items": [
+      {
+        "title": "Lost in the Chat",
+        "description": "Bookings buried in endless message threads. Missed appointments, double bookings, and frustrated customers."
+      },
+      {
+        "title": "Apps Are Expensive",
+        "description": "Building a custom booking app costs thousands and takes months. Most small businesses can't justify the investment."
+      },
+      {
+        "title": "Customers Won't Download",
+        "description": "Your clients don't want another app on their phone. They're already on WhatsApp — meet them there."
+      },
+      {
+        "title": "No Visibility",
+        "description": "No dashboard, no analytics, no way to track cancellations or manage your team's schedule efficiently."
+      }
+    ]
+  },
+  "solution": {
+    "title": "The Best of Both Worlds",
+    "subtitle": "Customers book through WhatsApp. You manage everything from a powerful backoffice.",
+    "whatsapp": {
+      "title": "WhatsApp for Customers",
+      "description": "Your clients book, confirm, and get reminders through the app they already use every day. No downloads, no sign-ups.",
+      "features": ["Natural chat experience", "Automated booking flows", "Instant confirmations", "Smart reminders"]
+    },
+    "backoffice": {
+      "title": "Backoffice for Your Team",
+      "description": "A clean, powerful dashboard to manage services, schedules, bookings, and your team — all in one place.",
+      "features": ["Real-time dashboard", "Service management", "Team scheduling", "Client history"]
+    }
+  },
+  "howItWorks": {
+    "title": "Up and Running in 4 Steps",
+    "subtitle": "From zero to receiving bookings in less than 15 minutes.",
+    "steps": [
+      {
+        "step": "1",
+        "title": "Connect WhatsApp",
+        "description": "Link your WhatsApp Business account with a single click. We handle all the technical setup."
+      },
+      {
+        "step": "2",
+        "title": "Choose Your Preset",
+        "description": "Select your business type and we'll auto-configure services, hours, and messages for you."
+      },
+      {
+        "step": "3",
+        "title": "Customize Basics",
+        "description": "Fine-tune your services, availability, and branding. Everything is pre-filled — just adjust what you need."
+      },
+      {
+        "step": "4",
+        "title": "Start Receiving Bookings",
+        "description": "Go live and let your customers book through WhatsApp. You'll see everything in your dashboard."
+      }
+    ]
+  },
+  "features": {
+    "title": "Everything You Need to Manage Bookings",
+    "subtitle": "Built for small businesses that want to professionalize their WhatsApp booking experience.",
+    "items": [
+      {
+        "title": "WhatsApp-Native Booking",
+        "description": "Customers book directly through WhatsApp with guided flows. No external links or apps needed."
+      },
+      {
+        "title": "Automated Setup",
+        "description": "Choose your business type and get a pre-configured workspace with services, hours, and messages ready to go."
+      },
+      {
+        "title": "Smart Presets",
+        "description": "Industry-specific templates for barbershops, clinics, salons, and more. Start with best practices built in."
+      },
+      {
+        "title": "Service Management",
+        "description": "Create and manage your services with duration, pricing, and availability. Keep everything organized."
+      },
+      {
+        "title": "Booking Dashboard",
+        "description": "See all your bookings at a glance. Filter by date, status, or service. Confirm, reschedule, or cancel with one click."
+      },
+      {
+        "title": "Auto Notifications",
+        "description": "Confirmation messages, reminders, and cancellation notices sent automatically through WhatsApp."
+      },
+      {
+        "title": "Multi-Tenant Platform",
+        "description": "Built as a true SaaS platform. Each business gets its own isolated workspace and configuration."
+      },
+      {
+        "title": "Future-Ready",
+        "description": "Payments, commerce, loyalty programs, and delivery modules are on the roadmap. Your setup grows with you."
+      }
+    ]
+  },
+  "verticals": {
+    "title": "Built for Your Industry",
+    "subtitle": "Pre-configured presets for the businesses that rely on WhatsApp the most.",
+    "items": [
+      {
+        "title": "Barbershops",
+        "description": "Haircuts, beard trims, combos — with preset durations and smart scheduling for walk-in friendly businesses.",
+        "icon": "scissors"
+      },
+      {
+        "title": "Clinics & Aesthetics",
+        "description": "Consultations, treatments, follow-ups — with longer time slots and professional confirmation flows.",
+        "icon": "heart-pulse"
+      },
+      {
+        "title": "Beauty Salons",
+        "description": "Nails, hair, makeup — manage multiple service providers and their individual schedules.",
+        "icon": "sparkles"
+      },
+      {
+        "title": "Veterinary Clinics",
+        "description": "Pet appointments, vaccinations, check-ups — with client and pet tracking built in.",
+        "icon": "paw-print"
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Simple, Transparent Pricing",
+    "subtitle": "Start free. Upgrade as you grow. No surprises.",
+    "plans": [
+      {
+        "name": "Starter",
+        "price": "Free",
+        "description": "Perfect for getting started",
+        "features": ["WhatsApp booking flow", "Up to 50 bookings/month", "Basic notifications", "1 team member", "Email support"],
+        "cta": "Start Free",
+        "popular": false
+      },
+      {
+        "name": "Growth",
+        "price": "$29",
+        "period": "/month",
+        "description": "For growing businesses",
+        "features": ["Unlimited bookings", "Custom branding", "Advanced notifications", "Up to 5 team members", "Priority support", "Analytics dashboard"],
+        "cta": "Start Free Trial",
+        "popular": true
+      },
+      {
+        "name": "Premium",
+        "price": "$79",
+        "period": "/month",
+        "description": "For established businesses",
+        "features": ["Everything in Growth", "Unlimited team members", "API access", "Custom integrations", "Dedicated support", "Future modules included"],
+        "cta": "Contact Sales",
+        "popular": false
+      }
+    ]
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about Ventry.",
+    "items": [
+      {
+        "question": "Do my customers need to install an app?",
+        "answer": "No! Your customers book directly through WhatsApp, which they already have. No downloads, no sign-ups, no friction."
+      },
+      {
+        "question": "Can I use my current WhatsApp Business number?",
+        "answer": "Yes, absolutely. You connect your existing WhatsApp Business account during setup. We work with your current number."
+      },
+      {
+        "question": "Can I customize the messages sent to customers?",
+        "answer": "Yes. You can customize confirmation messages, reminders, and cancellation notices. We provide templates to get you started quickly."
+      },
+      {
+        "question": "Can my team manage bookings too?",
+        "answer": "Yes. You can invite team members to your backoffice with different roles (Owner, Admin, Staff). Everyone sees the same booking calendar."
+      },
+      {
+        "question": "Is Ventry only for bookings?",
+        "answer": "For now, yes — bookings are our MVP focus. But we're building modules for payments, e-commerce, loyalty programs, and more. Your setup will grow with the platform."
+      },
+      {
+        "question": "Will you support payments in the future?",
+        "answer": "Yes! Payment processing, online commerce, and delivery coordination are on our roadmap. Early adopters will get access first."
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "Launch Your WhatsApp Booking System in Minutes",
+    "subtitle": "Join hundreds of businesses already using Ventry to manage their bookings professionally.",
+    "placeholder": "Enter your email",
+    "cta": "Get Early Access",
+    "privacy": "No spam. No credit card required."
+  },
+  "footer": {
+    "description": "The plug-and-play WhatsApp Business platform for modern small businesses.",
+    "product": "Product",
+    "productLinks": ["Features", "Pricing", "Integrations", "Roadmap"],
+    "company": "Company",
+    "companyLinks": ["About", "Blog", "Careers", "Contact"],
+    "legal": "Legal",
+    "legalLinks": ["Privacy Policy", "Terms of Service", "Cookie Policy"],
+    "copyright": "© 2025 Ventry. All rights reserved."
+  }
+}

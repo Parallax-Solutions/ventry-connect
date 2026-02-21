@@ -1,0 +1,155 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "onboarding": "Setup",
+    "services": "Services",
+    "hours": "Business Hours",
+    "bookings": "Bookings",
+    "clients": "Clients",
+    "notifications": "Notifications",
+    "branding": "Branding",
+    "settings": "Settings",
+    "futureModules": "Future Modules",
+    "payments": "Payments",
+    "commerce": "Commerce",
+    "loyalty": "Loyalty",
+    "delivery": "Delivery",
+    "customerPortal": "Customer Portal"
+  },
+  "topbar": {
+    "search": "Search...",
+    "notifications": "Notifications",
+    "profile": "Profile",
+    "logout": "Log Out",
+    "myAccount": "My Account",
+    "tenantStatus": "Tenant Status"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Manage the services your business offers",
+    "addService": "Add Service",
+    "editService": "Edit Service",
+    "serviceName": "Service Name",
+    "duration": "Duration (minutes)",
+    "price": "Price",
+    "description": "Description",
+    "active": "Active",
+    "emptyState": {
+      "title": "No services yet",
+      "description": "Add your first service to start receiving bookings."
+    }
+  },
+  "hours": {
+    "title": "Business Hours",
+    "subtitle": "Set your weekly availability",
+    "day": "Day",
+    "open": "Open",
+    "close": "Close",
+    "closed": "Closed",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    }
+  },
+  "bookings": {
+    "title": "Bookings",
+    "subtitle": "Manage all your bookings",
+    "filters": "Filters",
+    "allStatuses": "All Statuses",
+    "allServices": "All Services",
+    "confirm": "Confirm",
+    "reschedule": "Reschedule",
+    "markComplete": "Mark Complete",
+    "details": "Booking Details",
+    "emptyState": {
+      "title": "No bookings found",
+      "description": "Bookings will appear here once customers start booking through WhatsApp."
+    }
+  },
+  "clients": {
+    "title": "Clients",
+    "subtitle": "Your customer directory",
+    "totalBookings": "Total Bookings",
+    "lastBooking": "Last Booking",
+    "futureBanner": "Client login portal coming in a future update",
+    "emptyState": {
+      "title": "No clients yet",
+      "description": "Clients will appear here after their first booking."
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Configure WhatsApp message templates",
+    "confirmation": "Booking Confirmation",
+    "reminder": "Booking Reminder",
+    "cancellation": "Cancellation Notice",
+    "template": "Message Template",
+    "preview": "Preview",
+    "enabled": "Enabled",
+    "variables": "Available variables: {name}, {service}, {date}, {time}"
+  },
+  "branding": {
+    "title": "Branding",
+    "subtitle": "Customize your business appearance",
+    "logo": "Business Logo",
+    "uploadLogo": "Upload Logo",
+    "primaryColor": "Primary Color",
+    "businessName": "Display Name",
+    "preview": "Preview"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General Settings",
+    "team": "Team Members",
+    "roles": "Roles & Permissions",
+    "futureModules": "Future Modules",
+    "teamPlaceholder": "Team management coming soon",
+    "rolesPlaceholder": "Role management coming soon",
+    "timezone": "Timezone",
+    "currency": "Currency",
+    "bookingBuffer": "Buffer Between Bookings (min)"
+  },
+  "onboarding": {
+    "title": "Setup Wizard",
+    "subtitle": "Let's get your business ready",
+    "steps": {
+      "businessInfo": "Business Info",
+      "connectWhatsApp": "Connect WhatsApp",
+      "choosePreset": "Choose Preset",
+      "services": "Services",
+      "hours": "Business Hours",
+      "review": "Review & Go Live"
+    },
+    "businessInfo": {
+      "name": "Business Name",
+      "type": "Business Type",
+      "logo": "Logo",
+      "color": "Brand Color"
+    },
+    "whatsapp": {
+      "title": "Connect Your WhatsApp Business",
+      "description": "Link your WhatsApp Business account to start receiving bookings.",
+      "connect": "Connect WhatsApp",
+      "connected": "WhatsApp Connected",
+      "phoneNumber": "Phone Number"
+    },
+    "presets": {
+      "title": "Choose Your Business Preset",
+      "description": "Select your industry and we'll pre-configure everything for you.",
+      "barbershop": "Barbershop",
+      "clinic": "Clinic / Aesthetics",
+      "salon": "Beauty Salon",
+      "vet": "Veterinary Clinic"
+    },
+    "review": {
+      "title": "Review & Go Live",
+      "description": "Everything looks good! Review your setup and go live.",
+      "checklist": "Setup Checklist"
+    }
+  }
+}

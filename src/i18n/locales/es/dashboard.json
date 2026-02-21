@@ -1,0 +1,37 @@
+{
+  "title": "Dashboard",
+  "welcome": "Bienvenido de vuelta",
+  "kpi": {
+    "todayBookings": "Reservas de Hoy",
+    "upcoming": "Próximas",
+    "cancellations": "Cancelaciones",
+    "activeServices": "Servicios Activos"
+  },
+  "recentBookings": "Reservas Recientes",
+  "quickActions": {
+    "title": "Acciones Rápidas",
+    "addService": "Agregar Servicio",
+    "configureHours": "Configurar Horarios",
+    "viewBookings": "Ver Reservas"
+  },
+  "onboarding": {
+    "title": "Progreso de Configuración",
+    "whatsappConnected": "WhatsApp Conectado",
+    "presetApplied": "Preset Aplicado",
+    "servicesConfigured": "Servicios Configurados",
+    "hoursConfigured": "Horarios Configurados",
+    "readyToGoLive": "Listo para Publicar"
+  },
+  "emptyState": {
+    "title": "Aún no hay reservas",
+    "description": "Completa tu configuración para empezar a recibir reservas por WhatsApp."
+  },
+  "table": {
+    "client": "Cliente",
+    "service": "Servicio",
+    "date": "Fecha",
+    "time": "Hora",
+    "status": "Estado",
+    "source": "Fuente"
+  }
+}
