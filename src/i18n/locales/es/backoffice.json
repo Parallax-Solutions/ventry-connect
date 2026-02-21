@@ -1,0 +1,155 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "onboarding": "Configuración",
+    "services": "Servicios",
+    "hours": "Horarios",
+    "bookings": "Reservas",
+    "clients": "Clientes",
+    "notifications": "Notificaciones",
+    "branding": "Marca",
+    "settings": "Ajustes",
+    "futureModules": "Módulos Futuros",
+    "payments": "Pagos",
+    "commerce": "Comercio",
+    "loyalty": "Lealtad",
+    "delivery": "Delivery",
+    "customerPortal": "Portal de Clientes"
+  },
+  "topbar": {
+    "search": "Buscar...",
+    "notifications": "Notificaciones",
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión",
+    "myAccount": "Mi Cuenta",
+    "tenantStatus": "Estado del Tenant"
+  },
+  "services": {
+    "title": "Servicios",
+    "subtitle": "Gestiona los servicios que ofrece tu negocio",
+    "addService": "Agregar Servicio",
+    "editService": "Editar Servicio",
+    "serviceName": "Nombre del Servicio",
+    "duration": "Duración (minutos)",
+    "price": "Precio",
+    "description": "Descripción",
+    "active": "Activo",
+    "emptyState": {
+      "title": "Aún no hay servicios",
+      "description": "Agrega tu primer servicio para empezar a recibir reservas."
+    }
+  },
+  "hours": {
+    "title": "Horarios de Atención",
+    "subtitle": "Define tu disponibilidad semanal",
+    "day": "Día",
+    "open": "Apertura",
+    "close": "Cierre",
+    "closed": "Cerrado",
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Thursday",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    }
+  },
+  "bookings": {
+    "title": "Reservas",
+    "subtitle": "Gestiona todas tus reservas",
+    "filters": "Filtros",
+    "allStatuses": "Todos los Estados",
+    "allServices": "Todos los Servicios",
+    "confirm": "Confirmar",
+    "reschedule": "Reprogramar",
+    "markComplete": "Marcar Completada",
+    "details": "Detalles de la Reserva",
+    "emptyState": {
+      "title": "No se encontraron reservas",
+      "description": "Las reservas aparecerán aquí cuando los clientes empiecen a reservar por WhatsApp."
+    }
+  },
+  "clients": {
+    "title": "Clientes",
+    "subtitle": "Tu directorio de clientes",
+    "totalBookings": "Total de Reservas",
+    "lastBooking": "Última Reserva",
+    "futureBanner": "Portal de acceso para clientes disponible próximamente",
+    "emptyState": {
+      "title": "Aún no hay clientes",
+      "description": "Los clientes aparecerán aquí después de su primera reserva."
+    }
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "subtitle": "Configura las plantillas de mensajes de WhatsApp",
+    "confirmation": "Confirmación de Reserva",
+    "reminder": "Recordatorio de Reserva",
+    "cancellation": "Aviso de Cancelación",
+    "template": "Plantilla de Mensaje",
+    "preview": "Vista Previa",
+    "enabled": "Habilitado",
+    "variables": "Variables disponibles: {name}, {service}, {date}, {time}"
+  },
+  "branding": {
+    "title": "Marca",
+    "subtitle": "Personaliza la apariencia de tu negocio",
+    "logo": "Logo del Negocio",
+    "uploadLogo": "Subir Logo",
+    "primaryColor": "Color Primario",
+    "businessName": "Nombre a Mostrar",
+    "preview": "Vista Previa"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "general": "Ajustes Generales",
+    "team": "Miembros del Equipo",
+    "roles": "Roles y Permisos",
+    "futureModules": "Módulos Futuros",
+    "teamPlaceholder": "Gestión de equipo próximamente",
+    "rolesPlaceholder": "Gestión de roles próximamente",
+    "timezone": "Zona Horaria",
+    "currency": "Moneda",
+    "bookingBuffer": "Espacio Entre Reservas (min)"
+  },
+  "onboarding": {
+    "title": "Asistente de Configuración",
+    "subtitle": "Preparemos tu negocio",
+    "steps": {
+      "businessInfo": "Info del Negocio",
+      "connectWhatsApp": "Conectar WhatsApp",
+      "choosePreset": "Elegir Preset",
+      "services": "Servicios",
+      "hours": "Horarios",
+      "review": "Revisar y Publicar"
+    },
+    "businessInfo": {
+      "name": "Nombre del Negocio",
+      "type": "Tipo de Negocio",
+      "logo": "Logo",
+      "color": "Color de Marca"
+    },
+    "whatsapp": {
+      "title": "Conecta Tu WhatsApp Business",
+      "description": "Vincula tu cuenta de WhatsApp Business para empezar a recibir reservas.",
+      "connect": "Conectar WhatsApp",
+      "connected": "WhatsApp Conectado",
+      "phoneNumber": "Número de Teléfono"
+    },
+    "presets": {
+      "title": "Elige el Preset de Tu Negocio",
+      "description": "Selecciona tu industria y pre-configuramos todo por ti.",
+      "barbershop": "Barbería",
+      "clinic": "Clínica / Estética",
+      "salon": "Salón de Belleza",
+      "vet": "Clínica Veterinaria"
+    },
+    "review": {
+      "title": "Revisar y Publicar",
+      "description": "¡Todo se ve bien! Revisa tu configuración y publica.",
+      "checklist": "Lista de Verificación"
+    }
+  }
+}

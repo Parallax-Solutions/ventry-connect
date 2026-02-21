@@ -1,0 +1,223 @@
+{
+  "nav": {
+    "features": "Funciones",
+    "howItWorks": "Cómo Funciona",
+    "pricing": "Precios",
+    "faq": "Preguntas",
+    "login": "Iniciar Sesión",
+    "getStarted": "Comenzar"
+  },
+  "hero": {
+    "title": "Tu Negocio en WhatsApp,",
+    "titleAccent": "Listo en Minutos",
+    "subtitle": "La plataforma plug-and-play que convierte tu WhatsApp Business en un sistema completo de reservas. Sin desarrollo de apps. Sin fricción. Solo resultados.",
+    "cta": "Empezar Gratis",
+    "ctaSecondary": "Agendar Demo",
+    "trustedBy": "Más de 500 negocios confían en nosotros en Latinoamérica"
+  },
+  "painPoints": {
+    "title": "¿Te Suena Familiar?",
+    "subtitle": "Gestionar reservas por chats de WhatsApp es un caos. Mereces algo mejor.",
+    "items": [
+      {
+        "title": "Perdido en el Chat",
+        "description": "Reservas enterradas en hilos interminables de mensajes. Citas perdidas, reservas duplicadas y clientes frustrados."
+      },
+      {
+        "title": "Las Apps Son Caras",
+        "description": "Desarrollar una app de reservas cuesta miles y toma meses. La mayoría de los negocios pequeños no pueden justificar la inversión."
+      },
+      {
+        "title": "Los Clientes No Descargan",
+        "description": "Tus clientes no quieren otra app en su teléfono. Ya están en WhatsApp — encuéntralos ahí."
+      },
+      {
+        "title": "Sin Visibilidad",
+        "description": "Sin dashboard, sin métricas, sin forma de rastrear cancelaciones o gestionar el horario de tu equipo eficientemente."
+      }
+    ]
+  },
+  "solution": {
+    "title": "Lo Mejor de Dos Mundos",
+    "subtitle": "Los clientes reservan por WhatsApp. Tú gestionas todo desde un backoffice potente.",
+    "whatsapp": {
+      "title": "WhatsApp para Clientes",
+      "description": "Tus clientes reservan, confirman y reciben recordatorios por la app que ya usan todos los días. Sin descargas, sin registros.",
+      "features": ["Experiencia natural de chat", "Flujos automatizados", "Confirmaciones instantáneas", "Recordatorios inteligentes"]
+    },
+    "backoffice": {
+      "title": "Backoffice para Tu Equipo",
+      "description": "Un dashboard limpio y potente para gestionar servicios, horarios, reservas y tu equipo — todo en un solo lugar.",
+      "features": ["Dashboard en tiempo real", "Gestión de servicios", "Programación de equipo", "Historial de clientes"]
+    }
+  },
+  "howItWorks": {
+    "title": "Funcionando en 4 Pasos",
+    "subtitle": "De cero a recibir reservas en menos de 15 minutos.",
+    "steps": [
+      {
+        "step": "1",
+        "title": "Conecta WhatsApp",
+        "description": "Vincula tu cuenta de WhatsApp Business con un solo clic. Nosotros nos encargamos de toda la configuración técnica."
+      },
+      {
+        "step": "2",
+        "title": "Elige Tu Preset",
+        "description": "Selecciona tu tipo de negocio y auto-configuramos servicios, horarios y mensajes por ti."
+      },
+      {
+        "step": "3",
+        "title": "Personaliza lo Básico",
+        "description": "Ajusta tus servicios, disponibilidad y marca. Todo viene pre-llenado — solo ajusta lo que necesites."
+      },
+      {
+        "step": "4",
+        "title": "Recibe Reservas",
+        "description": "Publica tu negocio y deja que tus clientes reserven por WhatsApp. Verás todo en tu dashboard."
+      }
+    ]
+  },
+  "features": {
+    "title": "Todo lo que Necesitas para Gestionar Reservas",
+    "subtitle": "Diseñado para negocios pequeños que quieren profesionalizar su experiencia de reservas en WhatsApp.",
+    "items": [
+      {
+        "title": "Reservas Nativas en WhatsApp",
+        "description": "Los clientes reservan directamente por WhatsApp con flujos guiados. Sin links externos ni apps."
+      },
+      {
+        "title": "Configuración Automatizada",
+        "description": "Elige tu tipo de negocio y obtén un espacio pre-configurado con servicios, horarios y mensajes listos."
+      },
+      {
+        "title": "Presets Inteligentes",
+        "description": "Plantillas específicas por industria para barberías, clínicas, salones y más. Empieza con mejores prácticas integradas."
+      },
+      {
+        "title": "Gestión de Servicios",
+        "description": "Crea y gestiona tus servicios con duración, precio y disponibilidad. Mantén todo organizado."
+      },
+      {
+        "title": "Dashboard de Reservas",
+        "description": "Ve todas tus reservas de un vistazo. Filtra por fecha, estado o servicio. Confirma, reprograma o cancela con un clic."
+      },
+      {
+        "title": "Notificaciones Automáticas",
+        "description": "Mensajes de confirmación, recordatorios y avisos de cancelación enviados automáticamente por WhatsApp."
+      },
+      {
+        "title": "Plataforma Multi-Tenant",
+        "description": "Construida como una verdadera plataforma SaaS. Cada negocio obtiene su propio espacio aislado."
+      },
+      {
+        "title": "Preparada para el Futuro",
+        "description": "Pagos, comercio, programas de lealtad y módulos de delivery están en el roadmap. Tu configuración crece contigo."
+      }
+    ]
+  },
+  "verticals": {
+    "title": "Diseñado para Tu Industria",
+    "subtitle": "Presets pre-configurados para los negocios que más dependen de WhatsApp.",
+    "items": [
+      {
+        "title": "Barberías",
+        "description": "Cortes, barba, combos — con duraciones preset y programación inteligente para negocios con walk-ins.",
+        "icon": "scissors"
+      },
+      {
+        "title": "Clínicas y Estéticas",
+        "description": "Consultas, tratamientos, seguimientos — con horarios más largos y flujos de confirmación profesionales.",
+        "icon": "heart-pulse"
+      },
+      {
+        "title": "Salones de Belleza",
+        "description": "Uñas, cabello, maquillaje — gestiona múltiples proveedores de servicio y sus horarios individuales.",
+        "icon": "sparkles"
+      },
+      {
+        "title": "Clínicas Veterinarias",
+        "description": "Citas para mascotas, vacunas, chequeos — con seguimiento de clientes y mascotas integrado.",
+        "icon": "paw-print"
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Precios Simples y Transparentes",
+    "subtitle": "Empieza gratis. Crece a tu ritmo. Sin sorpresas.",
+    "plans": [
+      {
+        "name": "Starter",
+        "price": "Gratis",
+        "description": "Perfecto para empezar",
+        "features": ["Flujo de reservas WhatsApp", "Hasta 50 reservas/mes", "Notificaciones básicas", "1 miembro del equipo", "Soporte por email"],
+        "cta": "Empezar Gratis",
+        "popular": false
+      },
+      {
+        "name": "Growth",
+        "price": "$29",
+        "period": "/mes",
+        "description": "Para negocios en crecimiento",
+        "features": ["Reservas ilimitadas", "Marca personalizada", "Notificaciones avanzadas", "Hasta 5 miembros", "Soporte prioritario", "Dashboard de analytics"],
+        "cta": "Prueba Gratuita",
+        "popular": true
+      },
+      {
+        "name": "Premium",
+        "price": "$79",
+        "period": "/mes",
+        "description": "Para negocios establecidos",
+        "features": ["Todo en Growth", "Miembros ilimitados", "Acceso API", "Integraciones custom", "Soporte dedicado", "Módulos futuros incluidos"],
+        "cta": "Contactar Ventas",
+        "popular": false
+      }
+    ]
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Todo lo que necesitas saber sobre Ventry.",
+    "items": [
+      {
+        "question": "¿Mis clientes necesitan instalar una app?",
+        "answer": "¡No! Tus clientes reservan directamente por WhatsApp, que ya tienen. Sin descargas, sin registros, sin fricción."
+      },
+      {
+        "question": "¿Puedo usar mi número actual de WhatsApp Business?",
+        "answer": "Sí, absolutamente. Conectas tu cuenta existente de WhatsApp Business durante la configuración. Trabajamos con tu número actual."
+      },
+      {
+        "question": "¿Puedo personalizar los mensajes que se envían?",
+        "answer": "Sí. Puedes personalizar mensajes de confirmación, recordatorios y avisos de cancelación. Proporcionamos plantillas para empezar rápidamente."
+      },
+      {
+        "question": "¿Mi equipo puede gestionar reservas también?",
+        "answer": "Sí. Puedes invitar miembros del equipo a tu backoffice con diferentes roles (Dueño, Admin, Staff). Todos ven el mismo calendario de reservas."
+      },
+      {
+        "question": "¿Ventry es solo para reservas?",
+        "answer": "Por ahora, sí — las reservas son nuestro foco MVP. Pero estamos construyendo módulos de pagos, e-commerce, lealtad y más. Tu configuración crecerá con la plataforma."
+      },
+      {
+        "question": "¿Soportarán pagos en el futuro?",
+        "answer": "¡Sí! Procesamiento de pagos, comercio online y coordinación de delivery están en nuestro roadmap. Los early adopters tendrán acceso primero."
+      }
+    ]
+  },
+  "finalCta": {
+    "title": "Lanza Tu Sistema de Reservas por WhatsApp en Minutos",
+    "subtitle": "Únete a cientos de negocios que ya usan Ventry para gestionar sus reservas profesionalmente.",
+    "placeholder": "Ingresa tu correo",
+    "cta": "Obtener Acceso Anticipado",
+    "privacy": "Sin spam. Sin tarjeta de crédito."
+  },
+  "footer": {
+    "description": "La plataforma plug-and-play de WhatsApp Business para negocios modernos.",
+    "product": "Producto",
+    "productLinks": ["Funciones", "Precios", "Integraciones", "Roadmap"],
+    "company": "Empresa",
+    "companyLinks": ["Nosotros", "Blog", "Carreras", "Contacto"],
+    "legal": "Legal",
+    "legalLinks": ["Política de Privacidad", "Términos de Servicio", "Política de Cookies"],
+    "copyright": "© 2025 Ventry. Todos los derechos reservados."
+  }
+}
