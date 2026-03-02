@@ -1,16 +1,21 @@
 export const ROUTES = {
   LANDING: '/',
   LOGIN: '/login',
-  BACKOFFICE: {
-    ROOT: '/app',
-    DASHBOARD: '/app',
-    ONBOARDING: '/app/setup',
-    SERVICES: '/app/services',
-    HOURS: '/app/hours',
-    BOOKINGS: '/app/bookings',
-    CLIENTS: '/app/clients',
-    NOTIFICATIONS: '/app/notifications',
-    BRANDING: '/app/branding',
-    SETTINGS: '/app/settings',
+  PLATFORM: {
+    TENANTS: '/platform/tenants',
+    TENANT_DETAIL: '/platform/tenants/:id',
+    USERS: '/platform/users',
+  },
+  TENANT: {
+    DASHBOARD: '/dashboard',
+    SERVICES: '/services',
+    BOOKINGS: '/bookings',
+    CLIENTS: '/clients',
+    TEAM: '/team',
+    WHATSAPP_SETUP: '/whatsapp/setup',
+    NOTIFICATIONS: '/notifications',
+    BRANDING: '/branding',
+    SETTINGS: '/settings',
+    HOURS: '/hours',
   },
 } as const;

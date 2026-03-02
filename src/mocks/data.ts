@@ -3,36 +3,38 @@ import type { Booking, Client, Service, BusinessHours, NotificationTemplate, Ten
 export const mockTenant: Tenant = {
   id: 'tenant-001',
   name: 'BarberCool Studio',
+  slug: 'barbercool-studio',
+  email: 'info@barbercool.com',
   businessType: 'barbershop',
-  status: 'active',
-  primaryColor: '#1a7a6d',
+  status: 'READY',
   phone: '+52 55 1234 5678',
-  whatsappConnected: true,
+  timezone: 'America/Mexico_City',
+  createdAt: '2025-01-01',
 };
 
 export const mockServices: Service[] = [
-  { id: 's1', name: 'Classic Haircut', duration: 30, price: 15, description: 'Traditional haircut with styling', active: true },
-  { id: 's2', name: 'Beard Trim', duration: 20, price: 10, description: 'Beard shaping and trim', active: true },
-  { id: 's3', name: 'Haircut + Beard Combo', duration: 45, price: 22, description: 'Complete grooming package', active: true },
-  { id: 's4', name: 'Hair Coloring', duration: 60, price: 35, description: 'Full color treatment', active: false },
-  { id: 's5', name: 'Kids Haircut', duration: 20, price: 10, description: 'Haircut for children under 12', active: true },
+  { id: 's1', name: 'Classic Haircut', duration: 30, price: 1500, currency: 'COP', description: 'Traditional haircut with styling', active: true },
+  { id: 's2', name: 'Beard Trim', duration: 20, price: 1000, currency: 'COP', description: 'Beard shaping and trim', active: true },
+  { id: 's3', name: 'Haircut + Beard Combo', duration: 45, price: 2200, currency: 'COP', description: 'Complete grooming package', active: true },
+  { id: 's4', name: 'Hair Coloring', duration: 60, price: 3500, currency: 'COP', description: 'Full color treatment', active: false },
+  { id: 's5', name: 'Kids Haircut', duration: 20, price: 1000, currency: 'COP', description: 'Haircut for children under 12', active: true },
 ];
 
 export const mockBookings: Booking[] = [
-  { id: 'b1', clientId: 'c1', clientName: 'Carlos Mendoza', clientPhone: '+52 55 9876 5432', serviceId: 's1', serviceName: 'Classic Haircut', date: '2025-06-15', time: '10:00', status: 'confirmed', source: 'whatsapp' },
-  { id: 'b2', clientId: 'c2', clientName: 'Ana García', clientPhone: '+52 55 5555 1234', serviceId: 's3', serviceName: 'Haircut + Beard Combo', date: '2025-06-15', time: '11:00', status: 'pending', source: 'whatsapp' },
-  { id: 'b3', clientId: 'c3', clientName: 'Roberto Silva', clientPhone: '+52 55 4444 5678', serviceId: 's2', serviceName: 'Beard Trim', date: '2025-06-15', time: '14:00', status: 'completed', source: 'whatsapp' },
-  { id: 'b4', clientId: 'c4', clientName: 'María López', clientPhone: '+52 55 3333 9012', serviceId: 's5', serviceName: 'Kids Haircut', date: '2025-06-16', time: '09:30', status: 'confirmed', source: 'manual' },
-  { id: 'b5', clientId: 'c5', clientName: 'Diego Ramírez', clientPhone: '+52 55 2222 3456', serviceId: 's1', serviceName: 'Classic Haircut', date: '2025-06-16', time: '12:00', status: 'cancelled', source: 'whatsapp' },
-  { id: 'b6', clientId: 'c1', clientName: 'Carlos Mendoza', clientPhone: '+52 55 9876 5432', serviceId: 's3', serviceName: 'Haircut + Beard Combo', date: '2025-06-17', time: '15:00', status: 'pending', source: 'whatsapp' },
+  { id: 'b1', clientId: 'c1', client: { firstName: 'Carlos', lastName: 'Mendoza', phone: '+52 55 9876 5432' }, serviceId: 's1', service: { name: 'Classic Haircut', duration: 30 }, scheduledDate: '2025-06-15', scheduledTime: '10:00', status: 'CONFIRMED' },
+  { id: 'b2', clientId: 'c2', client: { firstName: 'Ana', lastName: 'García', phone: '+52 55 5555 1234' }, serviceId: 's3', service: { name: 'Haircut + Beard Combo', duration: 45 }, scheduledDate: '2025-06-15', scheduledTime: '11:00', status: 'PENDING' },
+  { id: 'b3', clientId: 'c3', client: { firstName: 'Roberto', lastName: 'Silva', phone: '+52 55 4444 5678' }, serviceId: 's2', service: { name: 'Beard Trim', duration: 20 }, scheduledDate: '2025-06-15', scheduledTime: '14:00', status: 'COMPLETED' },
+  { id: 'b4', clientId: 'c4', client: { firstName: 'María', lastName: 'López', phone: '+52 55 3333 9012' }, serviceId: 's5', service: { name: 'Kids Haircut', duration: 20 }, scheduledDate: '2025-06-16', scheduledTime: '09:30', status: 'CONFIRMED' },
+  { id: 'b5', clientId: 'c5', client: { firstName: 'Diego', lastName: 'Ramírez', phone: '+52 55 2222 3456' }, serviceId: 's1', service: { name: 'Classic Haircut', duration: 30 }, scheduledDate: '2025-06-16', scheduledTime: '12:00', status: 'CANCELLED', cancellationReason: 'Client requested' },
+  { id: 'b6', clientId: 'c1', client: { firstName: 'Carlos', lastName: 'Mendoza', phone: '+52 55 9876 5432' }, serviceId: 's3', service: { name: 'Haircut + Beard Combo', duration: 45 }, scheduledDate: '2025-06-17', scheduledTime: '15:00', status: 'PENDING' },
 ];
 
 export const mockClients: Client[] = [
-  { id: 'c1', name: 'Carlos Mendoza', phone: '+52 55 9876 5432', email: 'carlos@email.com', totalBookings: 12, lastBooking: '2025-06-15', createdAt: '2025-01-10' },
-  { id: 'c2', name: 'Ana García', phone: '+52 55 5555 1234', totalBookings: 5, lastBooking: '2025-06-15', createdAt: '2025-02-20' },
-  { id: 'c3', name: 'Roberto Silva', phone: '+52 55 4444 5678', email: 'roberto@email.com', totalBookings: 8, lastBooking: '2025-06-15', createdAt: '2025-01-25' },
-  { id: 'c4', name: 'María López', phone: '+52 55 3333 9012', totalBookings: 3, lastBooking: '2025-06-16', createdAt: '2025-03-15' },
-  { id: 'c5', name: 'Diego Ramírez', phone: '+52 55 2222 3456', email: 'diego@email.com', totalBookings: 15, lastBooking: '2025-06-16', createdAt: '2024-12-05' },
+  { id: 'c1', firstName: 'Carlos', lastName: 'Mendoza', phone: '+52 55 9876 5432', email: 'carlos@email.com', status: 'ACTIVE', createdAt: '2025-01-10' },
+  { id: 'c2', firstName: 'Ana', lastName: 'García', phone: '+52 55 5555 1234', status: 'ACTIVE', createdAt: '2025-02-20' },
+  { id: 'c3', firstName: 'Roberto', lastName: 'Silva', phone: '+52 55 4444 5678', email: 'roberto@email.com', status: 'ACTIVE', createdAt: '2025-01-25' },
+  { id: 'c4', firstName: 'María', lastName: 'López', phone: '+52 55 3333 9012', status: 'INACTIVE', createdAt: '2025-03-15' },
+  { id: 'c5', firstName: 'Diego', lastName: 'Ramírez', phone: '+52 55 2222 3456', email: 'diego@email.com', status: 'BLOCKED', createdAt: '2024-12-05' },
 ];
 
 export const mockBusinessHours: BusinessHours[] = [
@@ -57,3 +59,7 @@ export const mockKPIs = {
   cancellations: 2,
   activeServices: 4,
 };
+
+// Helper to format client full name
+export const formatClientName = (client: { firstName: string; lastName: string }) =>
+  `${client.firstName} ${client.lastName}`;

@@ -2,10 +2,9 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { KPICard } from '@/components/molecules/KPICard';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
-import { mockBookings, mockKPIs } from '@/mocks/data';
+import { mockBookings, mockKPIs, formatClientName } from '@/mocks/data';
 import { ROUTES } from '@/constants/routes';
 import { CalendarDays, Clock, XCircle, Scissors, Plus, Settings, ArrowRight, CheckCircle2, Circle } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -14,9 +13,8 @@ export default function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
 
   const onboardingSteps = [
-    { key: 'whatsappConnected', done: true },
-    { key: 'presetApplied', done: true },
     { key: 'servicesConfigured', done: true },
+    { key: 'whatsappConnected', done: false },
     { key: 'hoursConfigured', done: true },
     { key: 'readyToGoLive', done: false },
   ];
@@ -41,7 +39,7 @@ export default function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="font-display">{t('dashboard:recentBookings')}</CardTitle>
-            <Link to={ROUTES.BACKOFFICE.BOOKINGS}>
+            <Link to={ROUTES.TENANT.BOOKINGS}>
               <Button variant="ghost" size="sm">{t('common:viewAll')} <ArrowRight className="h-3 w-3 ml-1" /></Button>
             </Link>
           </CardHeader>
@@ -59,11 +57,11 @@ export default function DashboardPage() {
               <TableBody>
                 {mockBookings.slice(0, 5).map((b) => (
                   <TableRow key={b.id}>
-                    <TableCell className="font-medium">{b.clientName}</TableCell>
-                    <TableCell>{b.serviceName}</TableCell>
-                    <TableCell>{b.date}</TableCell>
-                    <TableCell>{b.time}</TableCell>
-                    <TableCell><StatusBadge status={b.status} label={t(`common:${b.status}`)} /></TableCell>
+                    <TableCell className="font-medium">{formatClientName(b.client)}</TableCell>
+                    <TableCell>{b.service.name}</TableCell>
+                    <TableCell>{b.scheduledDate}</TableCell>
+                    <TableCell>{b.scheduledTime}</TableCell>
+                    <TableCell><StatusBadge status={b.status} /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -78,13 +76,13 @@ export default function DashboardPage() {
               <CardTitle className="font-display text-lg">{t('dashboard:quickActions.title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Link to={ROUTES.BACKOFFICE.SERVICES}>
+              <Link to={ROUTES.TENANT.SERVICES}>
                 <Button variant="outline" className="w-full justify-start gap-2"><Plus className="h-4 w-4" /> {t('dashboard:quickActions.addService')}</Button>
               </Link>
-              <Link to={ROUTES.BACKOFFICE.HOURS}>
+              <Link to={ROUTES.TENANT.HOURS}>
                 <Button variant="outline" className="w-full justify-start gap-2"><Settings className="h-4 w-4" /> {t('dashboard:quickActions.configureHours')}</Button>
               </Link>
-              <Link to={ROUTES.BACKOFFICE.BOOKINGS}>
+              <Link to={ROUTES.TENANT.BOOKINGS}>
                 <Button variant="outline" className="w-full justify-start gap-2"><CalendarDays className="h-4 w-4" /> {t('dashboard:quickActions.viewBookings')}</Button>
               </Link>
             </CardContent>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
 import { LanguageSwitcher } from '@/components/atoms/LanguageSwitcher';
@@ -7,27 +7,37 @@ import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { mockTenant } from '@/mocks/data';
+import { useAuthStore } from '@/stores/authStore';
+import { useLogout } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import {
-  LayoutDashboard, Settings as SettingsIcon, Wand2, Scissors, Clock, CalendarDays,
-  Users, Bell, Palette, Menu, X, MessageCircle, ChevronRight,
-  CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Search, User, LogOut,
+  LayoutDashboard, Settings as SettingsIcon, Scissors, Clock, CalendarDays,
+  Users, Bell, Palette, Menu, MessageCircle, ChevronRight,
+  CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Search, User, LogOut, UsersRound, MessageSquare,
 } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import type { UserRole } from '@/types';
 
-const mainNav = [
-  { key: 'dashboard', icon: LayoutDashboard, path: ROUTES.BACKOFFICE.DASHBOARD },
-  { key: 'onboarding', icon: Wand2, path: ROUTES.BACKOFFICE.ONBOARDING },
-  { key: 'services', icon: Scissors, path: ROUTES.BACKOFFICE.SERVICES },
-  { key: 'hours', icon: Clock, path: ROUTES.BACKOFFICE.HOURS },
-  { key: 'bookings', icon: CalendarDays, path: ROUTES.BACKOFFICE.BOOKINGS },
-  { key: 'clients', icon: Users, path: ROUTES.BACKOFFICE.CLIENTS },
-  { key: 'notifications', icon: Bell, path: ROUTES.BACKOFFICE.NOTIFICATIONS },
-  { key: 'branding', icon: Palette, path: ROUTES.BACKOFFICE.BRANDING },
-  { key: 'settings', icon: SettingsIcon, path: ROUTES.BACKOFFICE.SETTINGS },
+interface NavItem {
+  key: string;
+  icon: React.ElementType;
+  path: string;
+  roles?: UserRole[];
+}
+
+const mainNav: NavItem[] = [
+  { key: 'dashboard', icon: LayoutDashboard, path: ROUTES.TENANT.DASHBOARD },
+  { key: 'bookings', icon: CalendarDays, path: ROUTES.TENANT.BOOKINGS },
+  { key: 'clients', icon: Users, path: ROUTES.TENANT.CLIENTS, roles: ['OWNER', 'ADMIN'] },
+  { key: 'services', icon: Scissors, path: ROUTES.TENANT.SERVICES, roles: ['OWNER', 'ADMIN'] },
+  { key: 'hours', icon: Clock, path: ROUTES.TENANT.HOURS, roles: ['OWNER', 'ADMIN'] },
+  { key: 'team', icon: UsersRound, path: ROUTES.TENANT.TEAM, roles: ['OWNER'] },
+  { key: 'whatsapp', icon: MessageSquare, path: ROUTES.TENANT.WHATSAPP_SETUP, roles: ['OWNER'] },
+  { key: 'notifications', icon: Bell, path: ROUTES.TENANT.NOTIFICATIONS, roles: ['OWNER', 'ADMIN'] },
+  { key: 'branding', icon: Palette, path: ROUTES.TENANT.BRANDING, roles: ['OWNER', 'ADMIN'] },
+  { key: 'settings', icon: SettingsIcon, path: ROUTES.TENANT.SETTINGS, roles: ['OWNER'] },
 ];
 
 const futureNav = [
@@ -38,13 +48,21 @@ const futureNav = [
   { key: 'customerPortal', icon: UserCircle },
 ];
 
-export default function BackofficeLayout() {
+export default function TenantLayout() {
   const { t } = useTranslation('backoffice');
   const location = useLocation();
+  const { user } = useAuthStore();
+  const logout = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const userRole = user?.role ?? 'OWNER';
+
+  const visibleNav = mainNav.filter(
+    (item) => !item.roles || item.roles.includes(userRole),
+  );
+
   const isActive = (path: string) => {
-    if (path === ROUTES.BACKOFFICE.DASHBOARD) return location.pathname === path;
+    if (path === ROUTES.TENANT.DASHBOARD) return location.pathname === path;
     return location.pathname.startsWith(path);
   };
 
@@ -58,7 +76,7 @@ export default function BackofficeLayout() {
       </div>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        {mainNav.map((item) => (
+        {visibleNav.map((item) => (
           <Link
             key={item.key}
             to={item.path}
@@ -128,10 +146,6 @@ export default function BackofficeLayout() {
           <div className="flex-1 md:flex-initial" />
 
           <div className="flex items-center gap-2">
-            <div className="hidden sm:flex items-center gap-2 mr-2">
-              <span className="text-sm font-medium truncate max-w-[150px]">{mockTenant.name}</span>
-              <StatusBadge status={mockTenant.status} />
-            </div>
             <LanguageSwitcher variant="ghost" />
             <ThemeToggle />
             <DropdownMenu>
@@ -141,9 +155,13 @@ export default function BackofficeLayout() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <div className="px-2 py-1.5 text-sm text-muted-foreground">
+                  {user?.email}
+                </div>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem>{t('topbar.myAccount')}</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>
                   <LogOut className="h-4 w-4 mr-2" /> {t('topbar.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>

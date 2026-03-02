@@ -61,7 +61,7 @@ export default function LandingPage() {
               {t('hero.subtitle')}
             </motion.p>
             <motion.div {...fadeUp} transition={{ duration: 0.5, delay: 0.3 }} className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link to={ROUTES.BACKOFFICE.ONBOARDING}>
+              <Link to={ROUTES.LOGIN}>
                 <Button size="lg" className="gradient-primary border-0 text-white text-base px-8 h-12 shadow-lg shadow-primary/25">
                   {t('hero.cta')} <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
