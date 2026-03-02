@@ -6,7 +6,24 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Users, Shield, Loader2 } from 'lucide-react';
+
+const TIMEZONES = [
+  { value: 'America/Bogota', label: 'Bogotá (UTC-5)' },
+  { value: 'America/Mexico_City', label: 'Ciudad de México (UTC-6)' },
+  { value: 'America/Lima', label: 'Lima (UTC-5)' },
+  { value: 'America/Santiago', label: 'Santiago (UTC-4)' },
+  { value: 'America/Buenos_Aires', label: 'Buenos Aires (UTC-3)' },
+  { value: 'America/Sao_Paulo', label: 'São Paulo (UTC-3)' },
+  { value: 'America/Caracas', label: 'Caracas (UTC-4)' },
+  { value: 'America/Guayaquil', label: 'Guayaquil (UTC-5)' },
+  { value: 'America/Panama', label: 'Panamá (UTC-5)' },
+  { value: 'America/Costa_Rica', label: 'Costa Rica (UTC-6)' },
+  { value: 'America/New_York', label: 'New York (UTC-5)' },
+  { value: 'America/Los_Angeles', label: 'Los Angeles (UTC-8)' },
+  { value: 'Europe/Madrid', label: 'Madrid (UTC+1)' },
+];
 import { useAuthStore } from '@/stores/authStore';
 import { useTenant, useUpdateTenant } from '@/hooks/useTenants';
 
@@ -97,13 +114,17 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="setting-timezone">{t('settings.timezone')}</Label>
-                <Input
-                  id="setting-timezone"
-                  className="mt-1.5"
-                  value={timezone}
-                  onChange={(e) => setTimezone(e.target.value)}
-                />
+                <Label>{t('settings.timezone')}</Label>
+                <Select value={timezone} onValueChange={setTimezone}>
+                  <SelectTrigger className="mt-1.5">
+                    <SelectValue placeholder="Select timezone..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {TIMEZONES.map((tz) => (
+                      <SelectItem key={tz.value} value={tz.value}>{tz.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <Button
                 className="gradient-primary border-0 text-white"

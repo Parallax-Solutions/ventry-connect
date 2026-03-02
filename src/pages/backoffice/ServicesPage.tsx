@@ -96,38 +96,49 @@ export default function ServicesPage() {
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : services.length === 0 ? (
-        <EmptyState icon={<Scissors className="h-12 w-12" />} title={t('services.emptyState.title')} description={t('services.emptyState.description')} />
+        <EmptyState
+          icon={<Scissors className="h-12 w-12" />}
+          title={t('services.emptyState.title')}
+          description={t('services.emptyState.description')}
+          action={
+            <Button className="gradient-primary border-0 text-white" onClick={openCreate}>
+              <Plus className="h-4 w-4 mr-1" /> {t('services.addService')}
+            </Button>
+          }
+        />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {services.map((s) => (
-            <Card key={s.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-display font-semibold">{s.name}</h3>
-                  <StatusBadge status={s.isActive ? 'ACTIVE' : 'INACTIVE'} />
-                </div>
-                {s.description && <p className="text-sm text-muted-foreground mb-4">{s.description}</p>}
-                <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                  <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {s.durationMinutes} {t('common:minutes', { ns: 'common' })}</span>
-                  <span className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" /> {formatPrice(s.priceInCents, s.currency)}</span>
-                </div>
-                <div className="flex items-center justify-between pt-2 border-t border-border">
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={s.isActive}
-                      onCheckedChange={() => toggleActive(s)}
-                      disabled={updateMutation.isPending}
-                    />
-                    <span className="text-xs text-muted-foreground">{s.isActive ? t('services.active') : 'Inactive'}</span>
+        <>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {services.map((s) => (
+              <Card key={s.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="font-display font-semibold">{s.name}</h3>
+                    <StatusBadge status={s.isActive ? 'ACTIVE' : 'INACTIVE'} />
                   </div>
-                  <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(s)}>
-                    <Pencil className="h-3.5 w-3.5" />
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  {s.description && <p className="text-sm text-muted-foreground mb-4">{s.description}</p>}
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+                    <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" /> {s.durationMinutes} {t('common:minutes', { ns: 'common' })}</span>
+                    <span className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" /> {formatPrice(s.priceInCents, s.currency)}</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={s.isActive}
+                        onCheckedChange={() => toggleActive(s)}
+                        disabled={updateMutation.isPending}
+                      />
+                      <span className="text-xs text-muted-foreground">{s.isActive ? t('services.active') : 'Inactive'}</span>
+                    </div>
+                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => openEdit(s)}>
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
 
       <Dialog open={dialogMode !== null} onOpenChange={(open) => { if (!open) setDialogMode(null); }}>

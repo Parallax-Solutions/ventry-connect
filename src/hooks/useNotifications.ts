@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { notificationsApi, type UpsertNotificationTemplatesRequest } from '@/api/notifications';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 
 const NOTIFICATIONS_KEY = ['notifications', 'templates'] as const;
 
@@ -13,14 +13,16 @@ export function useNotificationTemplates() {
 
 export function useUpsertNotificationTemplates() {
   const qc = useQueryClient();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: UpsertNotificationTemplatesRequest) =>
       notificationsApi.upsertTemplates(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: NOTIFICATIONS_KEY });
-      toast({ title: 'Notification templates saved' });
+      toast.success('Notification templates saved');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to save templates');
     },
   });
 }

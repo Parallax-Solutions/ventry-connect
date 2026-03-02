@@ -8,12 +8,15 @@ import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { useClients, useCreateClient } from '@/hooks/useClients';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import { Users, Search, Phone, Mail, Plus, Loader2 } from 'lucide-react';
+import { Users, Search, Phone, Mail, Plus, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+
+const ITEMS_PER_PAGE = 12;
 
 export default function ClientsPage() {
   const { t } = useTranslation('backoffice');
   const [searchQuery, setSearchQuery] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [page, setPage] = useState(0);
   const { data: clients = [], isLoading } = useClients();
   const createMutation = useCreateClient();
 
@@ -28,6 +31,9 @@ export default function ClientsPage() {
     const q = searchQuery.toLowerCase();
     return fullName.includes(q) || c.phone.includes(q);
   });
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
+  const paginated = filtered.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
   const openCreate = () => {
     setFirstName('');
@@ -65,7 +71,7 @@ export default function ClientsPage() {
           placeholder={t('common:search', { ns: 'common' })}
           className="pl-9"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={(e) => { setSearchQuery(e.target.value); setPage(0); }}
         />
       </div>
 
@@ -74,35 +80,62 @@ export default function ClientsPage() {
           <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : filtered.length === 0 ? (
-        <EmptyState icon={<Users className="h-12 w-12" />} title={t('clients.emptyState.title')} description={t('clients.emptyState.description')} />
+        <EmptyState
+          icon={<Users className="h-12 w-12" />}
+          title={t('clients.emptyState.title')}
+          description={t('clients.emptyState.description')}
+          action={
+            <Button className="gradient-primary border-0 text-white" onClick={openCreate}>
+              <Plus className="h-4 w-4 mr-1" /> Add your first client
+            </Button>
+          }
+        />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((c) => (
-            <Card key={c.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-display font-bold text-primary">
-                      {c.firstName.charAt(0)}
+        <>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginated.map((c) => (
+              <Card key={c.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center font-display font-bold text-primary">
+                        {c.firstName.charAt(0)}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{c.firstName} {c.lastName}</h3>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Phone className="h-3 w-3" /> {c.phone}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-semibold">{c.firstName} {c.lastName}</h3>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1">
-                        <Phone className="h-3 w-3" /> {c.phone}
-                      </p>
-                    </div>
+                    <StatusBadge status={c.status} />
                   </div>
-                  <StatusBadge status={c.status} />
-                </div>
-                {c.email && (
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Mail className="h-3 w-3" /> {c.email}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  {c.email && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Mail className="h-3 w-3" /> {c.email}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                {page * ITEMS_PER_PAGE + 1}–{Math.min((page + 1) * ITEMS_PER_PAGE, filtered.length)} of {filtered.length}
+              </p>
+              <div className="flex items-center gap-1">
+                <Button variant="outline" size="icon" className="h-8 w-8" disabled={page === 0} onClick={() => setPage(page - 1)}>
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="icon" className="h-8 w-8" disabled={page >= totalPages - 1} onClick={() => setPage(page + 1)}>
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

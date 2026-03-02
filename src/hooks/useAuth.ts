@@ -2,14 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/stores/authStore';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { ROUTES } from '@/constants/routes';
 import type { LoginRequest, RegisterRequest } from '@/types';
 
 export function useLogin() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: LoginRequest) => authApi.login(data),
@@ -23,11 +22,7 @@ export function useLogin() {
       navigate(destination);
     },
     onError: (error: Error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Invalid email or password',
-        variant: 'destructive',
-      });
+      toast.error(error.message || 'Invalid email or password');
     },
   });
 }
@@ -35,7 +30,6 @@ export function useLogin() {
 export function useRegister() {
   const navigate = useNavigate();
   const { login } = useAuthStore();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: RegisterRequest) => authApi.register(data),
@@ -44,11 +38,7 @@ export function useRegister() {
       navigate(ROUTES.TENANT.ONBOARDING);
     },
     onError: (error: Error) => {
-      toast({
-        title: 'Error',
-        description: error.message || 'Registration failed',
-        variant: 'destructive',
-      });
+      toast.error(error.message || 'Registration failed');
     },
   });
 }

@@ -12,6 +12,8 @@ import { formatClientName } from '@/lib/utils';
 import { ROUTES } from '@/constants/routes';
 import { CalendarDays, Clock, XCircle, Scissors, Plus, Settings, ArrowRight, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { startOfWeek, addDays, format, parseISO, isSameDay } from 'date-fns';
 
 export default function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
@@ -31,6 +33,15 @@ export default function DashboardPage() {
   const upcoming = bookings.filter((b) => b.status === 'CONFIRMED' || b.status === 'PENDING').length;
   const cancellations = bookings.filter((b) => b.status === 'CANCELLED').length;
   const activeServices = services.filter((s) => s.isActive).length;
+
+  // Weekly chart data
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekData = Array.from({ length: 7 }, (_, i) => {
+    const day = addDays(weekStart, i);
+    const dayStr = format(day, 'yyyy-MM-dd');
+    const count = bookings.filter((b) => b.scheduledDate === dayStr).length;
+    return { day: format(day, 'EEE'), bookings: count };
+  });
 
   const onboardingSteps = [
     { key: 'servicesConfigured', done: onboardingStatus?.hasServices ?? false },
@@ -53,6 +64,28 @@ export default function DashboardPage() {
         <KPICard title={t('dashboard:kpi.cancellations')} value={cancellations} icon={XCircle} />
         <KPICard title={t('dashboard:kpi.activeServices')} value={activeServices} icon={Scissors} />
       </div>
+
+      {/* Weekly chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-display">{t('dashboard:weeklyTrend', { defaultValue: 'This Week' })}</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={weekData}>
+                <XAxis dataKey="day" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} width={30} />
+                <Tooltip
+                  contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', background: 'hsl(var(--background))' }}
+                  labelStyle={{ fontWeight: 600 }}
+                />
+                <Bar dataKey="bookings" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Bookings */}
