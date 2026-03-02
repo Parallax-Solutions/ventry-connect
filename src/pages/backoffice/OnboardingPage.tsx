@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { CheckCircle2, Circle, MessageCircle, ArrowLeft, ArrowRight, Rocket, Plus, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useServices } from '@/hooks/useServices';
@@ -33,6 +34,17 @@ export default function OnboardingPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to={ROUTES.TENANT.DASHBOARD}>Dashboard</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{t('onboarding.title')}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div>
         <h1 className="text-2xl font-display font-bold">{t('onboarding.title')}</h1>
         <p className="text-muted-foreground">{t('onboarding.subtitle')}</p>

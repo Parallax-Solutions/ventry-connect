@@ -35,6 +35,8 @@ export default function LoginPage() {
 
   const onSubmit = (data: LoginFormValues) => loginMutation.mutate(data as { email: string; password: string });
 
+  const serverError = loginMutation.error?.message;
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm">
@@ -51,6 +53,11 @@ export default function LoginPage() {
             <CardDescription>Sign in to your account</CardDescription>
           </CardHeader>
           <CardContent>
+            {serverError && (
+              <div className="mb-4 rounded-md bg-destructive/10 border border-destructive/30 px-3 py-2 text-sm text-destructive">
+                {serverError}
+              </div>
+            )}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <Label htmlFor="email">{t('email')}</Label>

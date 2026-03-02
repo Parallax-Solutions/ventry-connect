@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { tenantsApi } from '@/api/tenants';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import type { CreateTenantRequest, UpdateTenantRequest } from '@/types';
 
 const TENANTS_KEY = ['tenants'] as const;
@@ -22,40 +22,46 @@ export function useTenant(id: string) {
 
 export function useCreateTenant() {
   const qc = useQueryClient();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: CreateTenantRequest) => tenantsApi.create(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: TENANTS_KEY });
-      toast({ title: 'Tenant created successfully' });
+      toast.success('Tenant created successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to create tenant');
     },
   });
 }
 
 export function useActivateTenant() {
   const qc = useQueryClient();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (id: string) => tenantsApi.activate(id),
     onSuccess: (_, id) => {
       qc.invalidateQueries({ queryKey: TENANTS_KEY });
       qc.invalidateQueries({ queryKey: [...TENANTS_KEY, id] });
-      toast({ title: 'Tenant activated successfully' });
+      toast.success('Tenant activated successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to activate tenant');
     },
   });
 }
 
 export function useUpdateTenant() {
   const qc = useQueryClient();
-  const { toast } = useToast();
 
   return useMutation({
     mutationFn: (data: UpdateTenantRequest) => tenantsApi.updateMe(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: TENANTS_KEY });
-      toast({ title: 'Settings saved' });
+      toast.success('Settings saved');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to save settings');
     },
   });
 }

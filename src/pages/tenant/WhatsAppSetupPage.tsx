@@ -1,10 +1,13 @@
 import { useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { useWhatsAppConfig, useWhatsAppSetup } from '@/hooks/useWhatsAppConfig';
+import { ROUTES } from '@/constants/routes';
 import { MessageSquare, Wifi, WifiOff, Phone, Hash, Loader2 } from 'lucide-react';
 
 export default function WhatsAppSetupPage() {
@@ -38,6 +41,17 @@ export default function WhatsAppSetupPage() {
   if (config) {
     return (
       <div className="space-y-8">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link to={ROUTES.TENANT.DASHBOARD}>Dashboard</Link></BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>WhatsApp</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
         <div>
           <h1 className="text-2xl font-display font-bold">WhatsApp Configuration</h1>
           <p className="text-muted-foreground">Your WhatsApp Business account is connected</p>
@@ -74,6 +88,17 @@ export default function WhatsAppSetupPage() {
 
   return (
     <div className="space-y-8">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild><Link to={ROUTES.TENANT.DASHBOARD}>Dashboard</Link></BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>WhatsApp</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div>
         <h1 className="text-2xl font-display font-bold">Connect WhatsApp</h1>
         <p className="text-muted-foreground">Set up your WhatsApp Business integration</p>

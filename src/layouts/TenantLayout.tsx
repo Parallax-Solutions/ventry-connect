@@ -10,10 +10,11 @@ import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Settings as SettingsIcon, Scissors, Clock, CalendarDays,
   Users, Bell, Palette, Menu, MessageCircle, ChevronRight,
-  CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Search, User, LogOut, UsersRound, MessageSquare,
+  CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Search, User, LogOut, UsersRound, MessageSquare, X,
 } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -145,14 +146,33 @@ export default function TenantLayout() {
       </aside>
 
       {/* Mobile Sidebar */}
-      {sidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-40">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <aside className="absolute left-0 inset-y-0 w-64 bg-sidebar flex flex-col">
-            <SidebarContent />
-          </aside>
-        </div>
-      )}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <div className="lg:hidden fixed inset-0 z-40">
+            <motion.div
+              className="absolute inset-0 bg-black/50"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSidebarOpen(false)}
+            />
+            <motion.aside
+              className="absolute left-0 inset-y-0 w-64 bg-sidebar flex flex-col"
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            >
+              <div className="absolute top-3 right-3 z-10">
+                <Button variant="ghost" size="icon" className="h-8 w-8 text-sidebar-foreground" onClick={() => setSidebarOpen(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <SidebarContent />
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Main Content */}
       <div className="flex-1 lg:ml-64 flex flex-col min-h-screen">
