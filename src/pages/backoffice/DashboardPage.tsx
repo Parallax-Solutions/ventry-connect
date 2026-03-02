@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { KPICard } from '@/components/molecules/KPICard';
@@ -11,7 +12,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 
 export default function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
+  const { onboardingComplete, user } = useAuthStore();
 
+  // Redirect owner to onboarding if not completed
+  const needsOnboarding = (user?.role === 'OWNER') && !onboardingComplete;
+  if (needsOnboarding) {
+    return <Navigate to={ROUTES.TENANT.ONBOARDING} replace />;
+  }
   const onboardingSteps = [
     { key: 'servicesConfigured', done: true },
     { key: 'whatsappConnected', done: false },

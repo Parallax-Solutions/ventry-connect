@@ -55,6 +55,8 @@ export default function TenantLayout() {
   const logout = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const isOnboarding = location.pathname === ROUTES.TENANT.ONBOARDING;
+
   const userRole = user?.role ?? 'OWNER';
 
   const visibleNav = mainNav.filter(
@@ -112,6 +114,28 @@ export default function TenantLayout() {
       </nav>
     </>
   );
+
+  // During onboarding, show a minimal layout without sidebar
+  if (isOnboarding) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border h-16 flex items-center px-4 lg:px-8 gap-4">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+              <MessageCircle className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-display font-bold text-lg">Ventry</span>
+          </div>
+          <div className="flex-1" />
+          <LanguageSwitcher variant="ghost" />
+          <ThemeToggle />
+        </header>
+        <main className="flex-1 p-4 lg:p-8">
+          <Outlet />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-background">
