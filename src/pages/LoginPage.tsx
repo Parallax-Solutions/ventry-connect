@@ -84,6 +84,25 @@ export default function LoginPage() {
                 Sign In
               </Button>
             </form>
+
+            {/* Demo credentials */}
+            <div className="mt-4 pt-4 border-t border-border">
+              <p className="text-xs text-muted-foreground text-center mb-2">Demo credentials</p>
+              <div className="space-y-1.5 text-xs text-muted-foreground">
+                <div className="flex justify-between bg-muted/50 rounded px-2 py-1.5">
+                  <div>
+                    <span className="font-medium text-foreground">Platform Admin</span>
+                    <br />admin@ventry.io / admin123
+                  </div>
+                </div>
+                <div className="flex justify-between bg-muted/50 rounded px-2 py-1.5">
+                  <div>
+                    <span className="font-medium text-foreground">Business Owner</span>
+                    <br />owner@barbercool.com / owner123
+                  </div>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

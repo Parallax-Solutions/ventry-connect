@@ -22,10 +22,10 @@ export function useLogin() {
 
       navigate(destination);
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
         title: 'Error',
-        description: 'Invalid email or password',
+        description: error.message || 'Invalid email or password',
         variant: 'destructive',
       });
     },
