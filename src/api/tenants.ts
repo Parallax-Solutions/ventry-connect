@@ -1,5 +1,5 @@
 import api from '@/lib/axios';
-import type { Tenant, CreateTenantRequest } from '@/types';
+import type { Tenant, CreateTenantRequest, UpdateTenantRequest } from '@/types';
 
 export const tenantsApi = {
   getAll: () =>
@@ -13,4 +13,7 @@ export const tenantsApi = {
 
   activate: (id: string) =>
     api.patch<Tenant>(`/tenants/${id}/activate`).then((r) => r.data),
+
+  updateMe: (data: UpdateTenantRequest) =>
+    api.patch<Tenant>('/tenants/me', data).then((r) => r.data),
 };

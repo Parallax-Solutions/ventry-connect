@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { tenantsApi } from '@/api/tenants';
 import { useToast } from '@/hooks/use-toast';
-import type { CreateTenantRequest } from '@/types';
+import type { CreateTenantRequest, UpdateTenantRequest } from '@/types';
 
 const TENANTS_KEY = ['tenants'] as const;
 
@@ -43,6 +43,19 @@ export function useActivateTenant() {
       qc.invalidateQueries({ queryKey: TENANTS_KEY });
       qc.invalidateQueries({ queryKey: [...TENANTS_KEY, id] });
       toast({ title: 'Tenant activated successfully' });
+    },
+  });
+}
+
+export function useUpdateTenant() {
+  const qc = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: (data: UpdateTenantRequest) => tenantsApi.updateMe(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: TENANTS_KEY });
+      toast({ title: 'Settings saved' });
     },
   });
 }

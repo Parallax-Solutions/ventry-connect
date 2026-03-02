@@ -1,14 +1,11 @@
 import api from '@/lib/axios';
-import type { AuthResponse, LoginRequest } from '@/types';
-import { isMockMode, mockLogin } from '@/mocks/auth';
+import type { AuthResponse, LoginRequest, RegisterRequest } from '@/types';
 
 export const authApi = {
+  register: async (data: RegisterRequest): Promise<AuthResponse> =>
+    api.post<AuthResponse>('/auth/register', data).then((r) => r.data),
+
   login: async (data: LoginRequest): Promise<AuthResponse> => {
-    if (isMockMode()) {
-      // Simulate network delay
-      await new Promise((r) => setTimeout(r, 400));
-      return mockLogin(data.email, data.password);
-    }
     return api.post<AuthResponse>('/auth/login', data).then((r) => r.data);
   },
 

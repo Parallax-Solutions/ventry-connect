@@ -1,17 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { EmptyState } from '@/components/molecules/EmptyState';
-import { Plus, Users } from 'lucide-react';
-import type { User } from '@/types';
-
-// Mock — will be replaced by useUsers()
-const mockAdmins: User[] = [
-  { id: '1', email: 'admin@ventry.co', role: 'VENTRY_ADMIN', scope: 'PLATFORM', status: 'ACTIVE', tenantId: null },
-];
+import { useUsers } from '@/hooks/useUsers';
+import { Plus, Users, Loader2 } from 'lucide-react';
 
 export default function PlatformUsersPage() {
+  const { data: users = [], isLoading } = useUsers();
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -26,7 +23,11 @@ export default function PlatformUsersPage() {
 
       <Card>
         <CardContent className="p-0">
-          {mockAdmins.length === 0 ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : users.length === 0 ? (
             <div className="p-8">
               <EmptyState icon={<Users className="h-12 w-12" />} title="No users yet" description="Create your first platform admin." />
             </div>
@@ -40,7 +41,7 @@ export default function PlatformUsersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockAdmins.map((u) => (
+                {users.map((u) => (
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">{u.email}</TableCell>
                     <TableCell><StatusBadge status="ACTIVE" label={u.role} /></TableCell>

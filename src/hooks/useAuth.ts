@@ -4,7 +4,7 @@ import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/stores/authStore';
 import { useToast } from '@/hooks/use-toast';
 import { ROUTES } from '@/constants/routes';
-import type { LoginRequest } from '@/types';
+import type { LoginRequest, RegisterRequest } from '@/types';
 
 export function useLogin() {
   const navigate = useNavigate();
@@ -26,6 +26,27 @@ export function useLogin() {
       toast({
         title: 'Error',
         description: error.message || 'Invalid email or password',
+        variant: 'destructive',
+      });
+    },
+  });
+}
+
+export function useRegister() {
+  const navigate = useNavigate();
+  const { login } = useAuthStore();
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: (data: RegisterRequest) => authApi.register(data),
+    onSuccess: (data) => {
+      login(data.user, data.accessToken, data.refreshToken);
+      navigate(ROUTES.TENANT.ONBOARDING);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Registration failed',
         variant: 'destructive',
       });
     },

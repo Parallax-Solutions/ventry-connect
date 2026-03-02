@@ -23,6 +23,14 @@ export interface AuthResponse {
   user: User;
 }
 
+export interface RegisterRequest {
+  businessName: string;
+  email: string;
+  password: string;
+  phone?: string;
+  presetType?: string;
+}
+
 // ─── Tenants ────────────────────────────────────────────
 export type TenantStatus = 'PENDING' | 'PROVISIONING' | 'READY' | 'SUSPENDED' | 'DEACTIVATED';
 
@@ -30,9 +38,9 @@ export interface Tenant {
   id: string;
   name: string;
   slug: string;
-  email: string;
-  phone?: string;
-  businessType?: string;
+  contactEmail: string;
+  contactPhone?: string;
+  presetType?: string;
   timezone?: string;
   status: TenantStatus;
   createdAt: string;
@@ -41,9 +49,9 @@ export interface Tenant {
 export interface CreateTenantRequest {
   name: string;
   slug: string;
-  email: string;
-  phone?: string;
-  businessType?: string;
+  contactEmail: string;
+  contactPhone?: string;
+  presetType?: string;
   timezone?: string;
 }
 
@@ -52,27 +60,27 @@ export interface Service {
   id: string;
   name: string;
   description?: string;
-  duration: number;
-  price: number;       // centavos
+  durationMinutes: number;
+  priceInCents: number;       // centavos
   currency: string;    // 'COP'
-  active: boolean;
+  isActive: boolean;
 }
 
 export interface CreateServiceRequest {
   name: string;
   description?: string;
-  duration: number;
-  price: number;       // centavos
+  durationMinutes: number;
+  priceInCents: number;       // centavos
   currency: string;
 }
 
 export interface UpdateServiceRequest {
   name?: string;
   description?: string;
-  duration?: number;
-  price?: number;
+  durationMinutes?: number;
+  priceInCents?: number;
   currency?: string;
-  active?: boolean;
+  isActive?: boolean;
 }
 
 // ─── Clients ────────────────────────────────────────────
@@ -108,9 +116,9 @@ export type BookingStatus = 'PENDING' | 'CONFIRMED' | 'COMPLETED' | 'CANCELLED' 
 export interface Booking {
   id: string;
   clientId: string;
-  client: { firstName: string; lastName: string; phone: string };
+  client?: { firstName: string; lastName: string; phone: string } | null;
   serviceId: string;
-  service: { name: string; duration: number };
+  service?: { name: string; durationMinutes: number } | null;
   scheduledDate: string;
   scheduledTime: string;
   status: BookingStatus;
@@ -135,16 +143,21 @@ export interface BookingFilters {
 }
 
 // ─── WhatsApp ───────────────────────────────────────────
-export type WhatsAppStatus = 'ACTIVE' | 'SUSPENDED';
-
 export interface WhatsAppConfig {
+  id: string;
+  tenantId: string;
+  appId: string;
   wabaId: string;
-  phoneNumber: string;
-  displayNumber: string;
-  status: WhatsAppStatus;
+  phoneNumberId: string;
+  displayPhoneNumber: string;
+  status: 'ACTIVE' | 'SUSPENDED' | 'PENDING_SETUP';
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface WhatsAppSetupRequest {
+  appId: string;
+  appSecret: string;
   code: string;
   wabaId: string;
   phoneNumberId: string;
@@ -162,14 +175,22 @@ export interface CreateTenantUserRequest {
   role: 'ADMIN' | 'STAFF';
 }
 
-// ─── Business Hours (kept for existing pages) ───────────
+// ─── Business Hours ──────────────────────────────────────
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export interface BusinessHours {
-  day: DayOfWeek;
+  id?: string;
+  dayOfWeek: DayOfWeek;
   isOpen: boolean;
   openTime: string;
   closeTime: string;
+}
+
+export interface UpdateTenantRequest {
+  name?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  timezone?: string;
 }
 
 // ─── Notification Templates (kept for existing pages) ───
@@ -180,9 +201,17 @@ export interface NotificationTemplate {
   enabled: boolean;
 }
 
+// ─── Onboarding ──────────────────────────────────────────
+export interface OnboardingStatus {
+  hasWhatsApp: boolean;
+  hasServices: boolean;
+  hasTeam: boolean;
+  isComplete: boolean;
+}
+
 // ─── Legacy aliases (landing page compatibility) ────────
 export type BusinessType = 'barbershop' | 'clinic' | 'salon' | 'vet';
-export type OnboardingStep = 'businessInfo' | 'connectWhatsApp' | 'choosePreset' | 'services' | 'hours' | 'review';
+export type OnboardingStep = 'connectWhatsApp' | 'services' | 'hours' | 'review';
 
 export interface OnboardingState {
   currentStep: OnboardingStep;

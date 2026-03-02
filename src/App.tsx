@@ -14,6 +14,7 @@ import ProtectedRoute from "@/components/organisms/ProtectedRoute";
 // Public pages
 import LandingPage from "@/pages/LandingPage";
 import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "@/pages/RegisterPage";
 
 // Platform pages
 import TenantsListPage from "@/pages/platform/TenantsListPage";
@@ -50,6 +51,7 @@ const App = () => (
               <Route path="/" element={<LandingPage />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
             {/* Platform Admin */}
             <Route element={<ProtectedRoute allowedRoles={['VENTRY_ADMIN']} />}>

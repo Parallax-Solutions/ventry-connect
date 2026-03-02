@@ -5,25 +5,38 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { KPICard } from '@/components/molecules/KPICard';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
-import { mockBookings, mockKPIs, formatClientName } from '@/mocks/data';
+import { useBookings } from '@/hooks/useBookings';
+import { useServices } from '@/hooks/useServices';
+import { useOnboardingStatus } from '@/hooks/useOnboarding';
+import { formatClientName } from '@/lib/utils';
 import { ROUTES } from '@/constants/routes';
-import { CalendarDays, Clock, XCircle, Scissors, Plus, Settings, ArrowRight, CheckCircle2, Circle } from 'lucide-react';
+import { CalendarDays, Clock, XCircle, Scissors, Plus, Settings, ArrowRight, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export default function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
   const { onboardingComplete, user } = useAuthStore();
+  const { data: bookings = [], isLoading: bookingsLoading } = useBookings();
+  const { data: services = [] } = useServices();
+  const { data: onboardingStatus } = useOnboardingStatus();
 
   // Redirect owner to onboarding if not completed
   const needsOnboarding = (user?.role === 'OWNER') && !onboardingComplete;
   if (needsOnboarding) {
     return <Navigate to={ROUTES.TENANT.ONBOARDING} replace />;
   }
+
+  const today = new Date().toISOString().slice(0, 10);
+  const todayBookings = bookings.filter((b) => b.scheduledDate === today).length;
+  const upcoming = bookings.filter((b) => b.status === 'CONFIRMED' || b.status === 'PENDING').length;
+  const cancellations = bookings.filter((b) => b.status === 'CANCELLED').length;
+  const activeServices = services.filter((s) => s.isActive).length;
+
   const onboardingSteps = [
-    { key: 'servicesConfigured', done: true },
-    { key: 'whatsappConnected', done: false },
+    { key: 'servicesConfigured', done: onboardingStatus?.hasServices ?? false },
+    { key: 'whatsappConnected', done: onboardingStatus?.hasWhatsApp ?? false },
     { key: 'hoursConfigured', done: true },
-    { key: 'readyToGoLive', done: false },
+    { key: 'readyToGoLive', done: onboardingStatus?.isComplete ?? false },
   ];
 
   return (
@@ -35,10 +48,10 @@ export default function DashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title={t('dashboard:kpi.todayBookings')} value={mockKPIs.todayBookings} icon={CalendarDays} trend="+12%" />
-        <KPICard title={t('dashboard:kpi.upcoming')} value={mockKPIs.upcoming} icon={Clock} />
-        <KPICard title={t('dashboard:kpi.cancellations')} value={mockKPIs.cancellations} icon={XCircle} />
-        <KPICard title={t('dashboard:kpi.activeServices')} value={mockKPIs.activeServices} icon={Scissors} />
+        <KPICard title={t('dashboard:kpi.todayBookings')} value={todayBookings} icon={CalendarDays} />
+        <KPICard title={t('dashboard:kpi.upcoming')} value={upcoming} icon={Clock} />
+        <KPICard title={t('dashboard:kpi.cancellations')} value={cancellations} icon={XCircle} />
+        <KPICard title={t('dashboard:kpi.activeServices')} value={activeServices} icon={Scissors} />
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -51,28 +64,36 @@ export default function DashboardPage() {
             </Link>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('dashboard:table.client')}</TableHead>
-                  <TableHead>{t('dashboard:table.service')}</TableHead>
-                  <TableHead>{t('dashboard:table.date')}</TableHead>
-                  <TableHead>{t('dashboard:table.time')}</TableHead>
-                  <TableHead>{t('dashboard:table.status')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {mockBookings.slice(0, 5).map((b) => (
-                  <TableRow key={b.id}>
-                    <TableCell className="font-medium">{formatClientName(b.client)}</TableCell>
-                    <TableCell>{b.service.name}</TableCell>
-                    <TableCell>{b.scheduledDate}</TableCell>
-                    <TableCell>{b.scheduledTime}</TableCell>
-                    <TableCell><StatusBadge status={b.status} /></TableCell>
+            {bookingsLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : bookings.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">{t('common:noData', { defaultValue: 'No bookings yet' })}</p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('dashboard:table.client')}</TableHead>
+                    <TableHead>{t('dashboard:table.service')}</TableHead>
+                    <TableHead>{t('dashboard:table.date')}</TableHead>
+                    <TableHead>{t('dashboard:table.time')}</TableHead>
+                    <TableHead>{t('dashboard:table.status')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {bookings.slice(0, 5).map((b) => (
+                    <TableRow key={b.id}>
+                      <TableCell className="font-medium">{b.client ? formatClientName(b.client) : '—'}</TableCell>
+                      <TableCell>{b.service?.name ?? '—'}</TableCell>
+                      <TableCell>{b.scheduledDate}</TableCell>
+                      <TableCell>{b.scheduledTime}</TableCell>
+                      <TableCell><StatusBadge status={b.status} /></TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </CardContent>
         </Card>
 

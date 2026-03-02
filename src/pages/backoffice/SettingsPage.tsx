@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Users, Shield } from 'lucide-react';
+import { CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Users, Shield, Loader2 } from 'lucide-react';
+import { useAuthStore } from '@/stores/authStore';
+import { useTenant, useUpdateTenant } from '@/hooks/useTenants';
 
 const futureModules = [
   { key: 'payments', icon: CreditCard, description: 'Accept payments through WhatsApp' },
@@ -17,6 +20,33 @@ const futureModules = [
 
 export default function SettingsPage() {
   const { t } = useTranslation('backoffice');
+  const { user } = useAuthStore();
+  const tenantId = user?.tenantId ?? '';
+  const { data: tenant } = useTenant(tenantId);
+  const updateMutation = useUpdateTenant();
+
+  const [name, setName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactPhone, setContactPhone] = useState('');
+  const [timezone, setTimezone] = useState('');
+
+  useEffect(() => {
+    if (tenant) {
+      setName(tenant.name);
+      setContactEmail(tenant.contactEmail);
+      setContactPhone(tenant.contactPhone ?? '');
+      setTimezone(tenant.timezone ?? 'America/Bogota');
+    }
+  }, [tenant]);
+
+  const handleSave = () => {
+    updateMutation.mutate({
+      name,
+      contactEmail,
+      contactPhone: contactPhone || undefined,
+      timezone,
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -34,11 +64,55 @@ export default function SettingsPage() {
 
         <TabsContent value="general" className="mt-6">
           <Card>
+            <CardHeader>
+              <CardTitle className="font-display">{t('settings.general')}</CardTitle>
+            </CardHeader>
             <CardContent className="p-6 space-y-4">
-              <div><Label>{t('settings.timezone')}</Label><Input className="mt-1.5" defaultValue="America/Mexico_City" /></div>
-              <div><Label>{t('settings.currency')}</Label><Input className="mt-1.5" defaultValue="MXN" /></div>
-              <div><Label>{t('settings.bookingBuffer')}</Label><Input type="number" className="mt-1.5" defaultValue={15} /></div>
-              <Button className="gradient-primary border-0 text-white">{t('common:save', { ns: 'common' })}</Button>
+              <div>
+                <Label htmlFor="setting-name">Business Name</Label>
+                <Input
+                  id="setting-name"
+                  className="mt-1.5"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="setting-email">Contact Email</Label>
+                <Input
+                  id="setting-email"
+                  type="email"
+                  className="mt-1.5"
+                  value={contactEmail}
+                  onChange={(e) => setContactEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="setting-phone">Contact Phone</Label>
+                <Input
+                  id="setting-phone"
+                  className="mt-1.5"
+                  value={contactPhone}
+                  onChange={(e) => setContactPhone(e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="setting-timezone">{t('settings.timezone')}</Label>
+                <Input
+                  id="setting-timezone"
+                  className="mt-1.5"
+                  value={timezone}
+                  onChange={(e) => setTimezone(e.target.value)}
+                />
+              </div>
+              <Button
+                className="gradient-primary border-0 text-white"
+                disabled={updateMutation.isPending}
+                onClick={handleSave}
+              >
+                {updateMutation.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                {t('common:save', { ns: 'common' })}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

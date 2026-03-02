@@ -1,18 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { EmptyState } from '@/components/molecules/EmptyState';
-import { Plus, UsersRound } from 'lucide-react';
-import type { User } from '@/types';
-
-// Mock — will be replaced by useUsers()
-const mockTeamMembers: User[] = [
-  { id: '1', email: 'owner@barbercool.com', role: 'OWNER', scope: 'TENANT', status: 'ACTIVE', tenantId: 'tenant-001' },
-  { id: '2', email: 'staff@barbercool.com', role: 'STAFF', scope: 'TENANT', status: 'ACTIVE', tenantId: 'tenant-001' },
-];
+import { useUsers } from '@/hooks/useUsers';
+import { Plus, UsersRound, Loader2 } from 'lucide-react';
 
 export default function TeamPage() {
+  const { data: users = [], isLoading } = useUsers();
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -27,7 +23,11 @@ export default function TeamPage() {
 
       <Card>
         <CardContent className="p-0">
-          {mockTeamMembers.length === 0 ? (
+          {isLoading ? (
+            <div className="flex items-center justify-center p-8">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </div>
+          ) : users.length === 0 ? (
             <div className="p-8">
               <EmptyState icon={<UsersRound className="h-12 w-12" />} title="No team members" description="Invite your first team member." />
             </div>
@@ -41,7 +41,7 @@ export default function TeamPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {mockTeamMembers.map((u) => (
+                {users.map((u) => (
                   <TableRow key={u.id}>
                     <TableCell className="font-medium">{u.email}</TableCell>
                     <TableCell><StatusBadge status="ACTIVE" label={u.role} /></TableCell>

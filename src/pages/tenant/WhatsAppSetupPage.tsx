@@ -1,18 +1,41 @@
+import { useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
-import { MessageSquare, Wifi, WifiOff, Phone, Hash } from 'lucide-react';
-import { useState } from 'react';
-
-// Mock: null = no config, object = configured
-const mockConfig = null as null | { wabaId: string; phoneNumber: string; displayNumber: string; status: 'ACTIVE' | 'SUSPENDED' };
+import { useWhatsAppConfig, useWhatsAppSetup } from '@/hooks/useWhatsAppConfig';
+import { MessageSquare, Wifi, WifiOff, Phone, Hash, Loader2 } from 'lucide-react';
 
 export default function WhatsAppSetupPage() {
-  const [hasConfig] = useState(!!mockConfig);
+  const { data: config, isLoading } = useWhatsAppConfig();
+  const setupMutation = useWhatsAppSetup();
 
-  if (hasConfig && mockConfig) {
+  const appIdRef = useRef<HTMLInputElement>(null);
+  const appSecretRef = useRef<HTMLInputElement>(null);
+  const codeRef = useRef<HTMLInputElement>(null);
+  const wabaIdRef = useRef<HTMLInputElement>(null);
+  const phoneNumberIdRef = useRef<HTMLInputElement>(null);
+
+  const handleConnect = () => {
+    setupMutation.mutate({
+      appId: appIdRef.current?.value ?? '',
+      appSecret: appSecretRef.current?.value ?? '',
+      code: codeRef.current?.value ?? '',
+      wabaId: wabaIdRef.current?.value ?? '',
+      phoneNumberId: phoneNumberIdRef.current?.value ?? '',
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (config) {
     return (
       <div className="space-y-8">
         <div>
@@ -35,14 +58,14 @@ export default function WhatsAppSetupPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
                 <Hash className="h-4 w-4 text-muted-foreground" />
-                <div><p className="text-xs text-muted-foreground">WABA ID</p><p className="text-sm font-medium">{mockConfig.wabaId}</p></div>
+                <div><p className="text-xs text-muted-foreground">WABA ID</p><p className="text-sm font-medium">{config.wabaId}</p></div>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <div><p className="text-xs text-muted-foreground">Display Number</p><p className="text-sm font-medium">{mockConfig.displayNumber}</p></div>
+                <div><p className="text-xs text-muted-foreground">Display Number</p><p className="text-sm font-medium">{config.displayPhoneNumber}</p></div>
               </div>
             </div>
-            <StatusBadge status={mockConfig.status} />
+            <StatusBadge status={config.status} />
           </CardContent>
         </Card>
       </div>
@@ -77,18 +100,31 @@ export default function WhatsAppSetupPage() {
           <div className="space-y-4">
             <p className="text-sm font-medium">Manual Setup (temporary)</p>
             <div>
+              <Label>App ID</Label>
+              <Input ref={appIdRef} className="mt-1.5" placeholder="Meta App ID" />
+            </div>
+            <div>
+              <Label>App Secret</Label>
+              <Input ref={appSecretRef} className="mt-1.5" type="password" placeholder="Meta App Secret" />
+            </div>
+            <div>
               <Label>Authorization Code</Label>
-              <Input className="mt-1.5" placeholder="Enter code from Meta Business" />
+              <Input ref={codeRef} className="mt-1.5" placeholder="Enter code from Meta Business" />
             </div>
             <div>
               <Label>WABA ID</Label>
-              <Input className="mt-1.5" placeholder="WhatsApp Business Account ID" />
+              <Input ref={wabaIdRef} className="mt-1.5" placeholder="WhatsApp Business Account ID" />
             </div>
             <div>
               <Label>Phone Number ID</Label>
-              <Input className="mt-1.5" placeholder="Phone number ID" />
+              <Input ref={phoneNumberIdRef} className="mt-1.5" placeholder="Phone number ID" />
             </div>
-            <Button className="w-full gradient-primary border-0 text-white">
+            <Button
+              className="w-full gradient-primary border-0 text-white"
+              disabled={setupMutation.isPending}
+              onClick={handleConnect}
+            >
+              {setupMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
               Connect WhatsApp
             </Button>
           </div>

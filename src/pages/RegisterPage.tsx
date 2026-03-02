@@ -1,9 +1,8 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useTranslation } from 'react-i18next';
-import { Navigate, Link } from 'react-router-dom';
-import { useLogin } from '@/hooks/useAuth';
+import { Link, Navigate } from 'react-router-dom';
+import { useRegister } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,20 +11,21 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { MessageCircle, Loader2 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 
-const loginSchema = z.object({
+const schema = z.object({
+  businessName: z.string().min(2, 'Business name must be at least 2 characters'),
   email: z.string().min(1, 'Email is required').email('Invalid email'),
-  password: z.string().min(1, 'Password is required'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  phone: z.string().optional(),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type FormValues = z.infer<typeof schema>;
 
-export default function LoginPage() {
-  const { t } = useTranslation('common');
-  const loginMutation = useLogin();
+export default function RegisterPage() {
+  const registerMutation = useRegister();
   const { isAuthenticated, user } = useAuthStore();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+    resolver: zodResolver(schema),
   });
 
   if (isAuthenticated && user) {
@@ -33,7 +33,7 @@ export default function LoginPage() {
     return <Navigate to={dest} replace />;
   }
 
-  const onSubmit = (data: LoginFormValues) => loginMutation.mutate(data as { email: string; password: string });
+  const onSubmit = (data: FormValues) => registerMutation.mutate(data);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -47,13 +47,23 @@ export default function LoginPage() {
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="font-display">Welcome back</CardTitle>
-            <CardDescription>Sign in to your account</CardDescription>
+            <CardTitle className="font-display">Create your account</CardTitle>
+            <CardDescription>Start your free trial today</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
-                <Label htmlFor="email">{t('email')}</Label>
+                <Label htmlFor="businessName">Business name</Label>
+                <Input
+                  id="businessName"
+                  className="mt-1.5"
+                  placeholder="My Barbershop"
+                  {...register('businessName')}
+                />
+                {errors.businessName && <p className="text-xs text-destructive mt-1">{errors.businessName.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
@@ -64,30 +74,38 @@ export default function LoginPage() {
                 {errors.email && <p className="text-xs text-destructive mt-1">{errors.email.message}</p>}
               </div>
               <div>
+                <Label htmlFor="phone">Phone (optional)</Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  className="mt-1.5"
+                  placeholder="+57 300 123 4567"
+                  {...register('phone')}
+                />
+              </div>
+              <div>
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   className="mt-1.5"
                   {...register('password')}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                 />
                 {errors.password && <p className="text-xs text-destructive mt-1">{errors.password.message}</p>}
               </div>
               <Button
                 type="submit"
                 className="w-full gradient-primary border-0 text-white"
-                disabled={loginMutation.isPending}
+                disabled={registerMutation.isPending}
               >
-                {loginMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Sign In
+                {registerMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Create account
               </Button>
             </form>
             <p className="text-center text-sm text-muted-foreground mt-4">
-              Don&apos;t have an account?{' '}
-              <Link to={ROUTES.REGISTER} className="text-primary hover:underline">
-                Create one
-              </Link>
+              Already have an account?{' '}
+              <Link to={ROUTES.LOGIN} className="text-primary hover:underline">Sign in</Link>
             </p>
           </CardContent>
         </Card>

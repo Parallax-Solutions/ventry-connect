@@ -1,6 +1,7 @@
 export const ROUTES = {
   LANDING: '/',
   LOGIN: '/login',
+  REGISTER: '/register',
   PLATFORM: {
     TENANTS: '/platform/tenants',
     TENANT_DETAIL: '/platform/tenants/:id',
