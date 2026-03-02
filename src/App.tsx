@@ -22,6 +22,7 @@ import PlatformUsersPage from "@/pages/platform/PlatformUsersPage";
 
 // Tenant pages
 import DashboardPage from "@/pages/backoffice/DashboardPage";
+import OnboardingPage from "@/pages/backoffice/OnboardingPage";
 import ServicesPage from "@/pages/backoffice/ServicesPage";
 import HoursPage from "@/pages/backoffice/HoursPage";
 import BookingsPage from "@/pages/backoffice/BookingsPage";
@@ -63,6 +64,7 @@ const App = () => (
             <Route element={<ProtectedRoute allowedRoles={['OWNER', 'ADMIN', 'STAFF']} />}>
               <Route element={<TenantLayout />}>
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/onboarding" element={<OnboardingPage />} />
                 <Route path="/services" element={<ServicesPage />} />
                 <Route path="/hours" element={<HoursPage />} />
                 <Route path="/bookings" element={<BookingsPage />} />

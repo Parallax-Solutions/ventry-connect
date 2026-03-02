@@ -8,6 +8,7 @@ export const ROUTES = {
   },
   TENANT: {
     DASHBOARD: '/dashboard',
+    ONBOARDING: '/onboarding',
     SERVICES: '/services',
     BOOKINGS: '/bookings',
     CLIENTS: '/clients',

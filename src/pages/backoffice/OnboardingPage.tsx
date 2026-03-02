@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, Circle, MessageCircle, Scissors, HeartPulse, Sparkles, PawPrint, ArrowLeft, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Circle, MessageCircle, Scissors, HeartPulse, Sparkles, PawPrint, ArrowLeft, ArrowRight, Rocket } from 'lucide-react';
 import type { OnboardingStep, BusinessType } from '@/types';
+import { useAuthStore } from '@/stores/authStore';
+import { ROUTES } from '@/constants/routes';
 import { cn } from '@/lib/utils';
 
 const STEPS: OnboardingStep[] = ['businessInfo', 'connectWhatsApp', 'choosePreset', 'services', 'hours', 'review'];
@@ -21,9 +24,16 @@ const presetIcons: Record<BusinessType, any> = {
 
 export default function OnboardingPage() {
   const { t } = useTranslation('backoffice');
+  const navigate = useNavigate();
+  const { completeOnboarding } = useAuthStore();
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedPreset, setSelectedPreset] = useState<BusinessType | ''>('');
   const [whatsappConnected, setWhatsappConnected] = useState(false);
+
+  const handleGoLive = () => {
+    completeOnboarding();
+    navigate(ROUTES.TENANT.DASHBOARD, { replace: true });
+  };
 
   const progress = ((currentStep + 1) / STEPS.length) * 100;
 
@@ -155,8 +165,8 @@ export default function OnboardingPage() {
                 <h2 className="font-display font-semibold text-xl">{t('onboarding.review.title')}</h2>
                 <p className="text-muted-foreground mt-2">{t('onboarding.review.description')}</p>
               </div>
-              <Button size="lg" className="gradient-primary border-0 text-white px-12">
-                {t('common:goLive', { ns: 'common' })} 🚀
+              <Button size="lg" className="gradient-primary border-0 text-white px-12" onClick={handleGoLive}>
+                {t('common:goLive', { ns: 'common' })} <Rocket className="h-5 w-5 ml-2" />
               </Button>
             </div>
           )}
