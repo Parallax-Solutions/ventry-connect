@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Link, Navigate } from 'react-router-dom';
+import type { RegisterRequest } from '@/types';
 import { useRegister } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ export default function RegisterPage() {
     return <Navigate to={dest} replace />;
   }
 
-  const onSubmit = (data: FormValues) => registerMutation.mutate(data);
+  const onSubmit = (data: FormValues) => registerMutation.mutate(data as RegisterRequest);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
