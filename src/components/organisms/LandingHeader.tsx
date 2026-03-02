@@ -6,7 +6,6 @@ import { LanguageSwitcher } from '@/components/atoms/LanguageSwitcher';
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 import { Menu, X, MessageCircle } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
-import { cn } from '@/lib/utils';
 
 export function LandingHeader() {
   const { t } = useTranslation('landing');
@@ -40,10 +39,10 @@ export function LandingHeader() {
         <div className="hidden md:flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle />
-          <Link to={ROUTES.BACKOFFICE.DASHBOARD}>
+          <Link to={ROUTES.LOGIN}>
             <Button variant="ghost" size="sm">{t('nav.login')}</Button>
           </Link>
-          <Link to={ROUTES.BACKOFFICE.ONBOARDING}>
+          <Link to={ROUTES.LOGIN}>
             <Button size="sm" className="gradient-primary border-0 text-white">{t('nav.getStarted')}</Button>
           </Link>
         </div>
@@ -65,10 +64,10 @@ export function LandingHeader() {
             <ThemeToggle />
           </div>
           <div className="flex flex-col gap-2 pt-2">
-            <Link to={ROUTES.BACKOFFICE.DASHBOARD}>
+            <Link to={ROUTES.LOGIN}>
               <Button variant="outline" className="w-full">{t('nav.login')}</Button>
             </Link>
-            <Link to={ROUTES.BACKOFFICE.ONBOARDING}>
+            <Link to={ROUTES.LOGIN}>
               <Button className="w-full gradient-primary border-0 text-white">{t('nav.getStarted')}</Button>
             </Link>
           </div>
