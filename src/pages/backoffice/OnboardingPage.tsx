@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { CheckCircle2, Circle, MessageCircle, ArrowLeft, ArrowRight, Rocket, Plus, Loader2 } from 'lucide-react';
+import { CheckCircle2, Circle, ArrowLeft, ArrowRight, Rocket, Plus, Loader2 } from 'lucide-react';
+import WhatsAppSetupPanel from '@/components/organisms/WhatsAppSetupPanel';
 import { useServices } from '@/hooks/useServices';
 import { useCompleteOnboarding, useOnboardingStatus } from '@/hooks/useOnboarding';
 import { ROUTES } from '@/constants/routes';
@@ -97,31 +98,12 @@ export default function OnboardingPage() {
         <CardContent className="p-8">
           {/* Step 0: WhatsApp */}
           {step === 'connectWhatsApp' && (
-            <div className="space-y-6 text-center py-8">
-              <div className={cn(
-                'h-20 w-20 rounded-2xl flex items-center justify-center mx-auto',
-                status?.hasWhatsApp ? 'bg-success/10' : 'bg-muted',
-              )}>
-                <MessageCircle className={cn('h-10 w-10', status?.hasWhatsApp ? 'text-success' : 'text-muted-foreground')} />
-              </div>
-              <div>
+            <div className="space-y-6 py-4">
+              <div className="space-y-2 text-center">
                 <h2 className="font-display font-semibold text-xl">{t('onboarding.whatsapp.title')}</h2>
-                <p className="text-muted-foreground mt-2">{t('onboarding.whatsapp.description')}</p>
+                <p className="text-muted-foreground">{t('onboarding.whatsapp.description')}</p>
               </div>
-              {status?.hasWhatsApp ? (
-                <Badge className="bg-success/15 text-success border-success/30" variant="outline">
-                  <CheckCircle2 className="h-3 w-3 mr-1" /> {t('onboarding.whatsapp.connected')}
-                </Badge>
-              ) : (
-                <Link to={ROUTES.TENANT.WHATSAPP_SETUP}>
-                  <Button className="gradient-primary border-0 text-white">
-                    {t('onboarding.whatsapp.connect')}
-                  </Button>
-                </Link>
-              )}
-              {!status?.hasWhatsApp && (
-                <p className="text-sm text-muted-foreground">Complete the WhatsApp connection before continuing.</p>
-              )}
+              <WhatsAppSetupPanel embedded onConfigured={() => setCurrentStep(1)} />
             </div>
           )}
 
