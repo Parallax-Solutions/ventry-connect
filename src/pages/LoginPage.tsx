@@ -3,18 +3,28 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslation } from 'react-i18next';
 import { Navigate, Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { useLogin } from '@/hooks/useAuth';
 import { useAuthStore } from '@/stores/authStore';
+import { FormErrorAlert } from '@/components/molecules/FormErrorAlert';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { getErrorMessages } from '@/lib/api-errors';
 import { MessageCircle, Loader2 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 
 const loginSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Invalid email'),
-  password: z.string().min(1, 'Password is required'),
+  email: z
+    .string()
+    .trim()
+    .min(1, 'Email is required')
+    .email('Enter a valid email address'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(8, 'Password must contain at least 8 characters'),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
@@ -24,9 +34,24 @@ export default function LoginPage() {
   const loginMutation = useLogin();
   const { isAuthenticated, user } = useAuthStore();
 
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
   });
+
+  useEffect(() => {
+    const subscription = watch(() => {
+      if (loginMutation.error) {
+        loginMutation.reset();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [loginMutation, watch]);
 
   if (isAuthenticated && user) {
     const dest = user.role === 'VENTRY_ADMIN' ? ROUTES.PLATFORM.TENANTS : ROUTES.TENANT.DASHBOARD;
@@ -35,7 +60,9 @@ export default function LoginPage() {
 
   const onSubmit = (data: LoginFormValues) => loginMutation.mutate(data as { email: string; password: string });
 
-  const serverError = loginMutation.error?.message;
+  const serverErrors = loginMutation.error
+    ? getErrorMessages(loginMutation.error, 'We could not sign you in')
+    : [];
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -53,11 +80,9 @@ export default function LoginPage() {
             <CardDescription>Sign in to your account</CardDescription>
           </CardHeader>
           <CardContent>
-            {serverError && (
-              <div className="mb-4 rounded-md bg-destructive/10 border border-destructive/30 px-3 py-2 text-sm text-destructive">
-                {serverError}
-              </div>
-            )}
+            <div className="space-y-4">
+              <FormErrorAlert title="Unable to sign in" messages={serverErrors} />
+            </div>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               <div>
                 <Label htmlFor="email">{t('email')}</Label>

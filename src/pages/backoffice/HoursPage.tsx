@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
+import { FormErrorAlert } from '@/components/molecules/FormErrorAlert';
 import { Loader2 } from 'lucide-react';
 import { useHours, useUpdateHours } from '@/hooks/useHours';
 import { useOnboardingStatus } from '@/hooks/useOnboarding';
@@ -26,6 +27,7 @@ export default function HoursPage() {
   const { data: serverHours, isLoading } = useHours();
   const updateMutation = useUpdateHours();
   const [hours, setHours] = useState<BusinessHours[]>(DEFAULT_HOURS);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (serverHours && serverHours.length > 0) {
@@ -38,6 +40,7 @@ export default function HoursPage() {
   }, [serverHours]);
 
   const toggleDay = (day: DayOfWeek) => {
+    if (formError) setFormError(null);
     setHours((prev) => prev.map((h) => (h.dayOfWeek === day ? { ...h, isOpen: !h.isOpen } : h)));
   };
 
@@ -46,6 +49,19 @@ export default function HoursPage() {
   };
 
   const handleSave = () => {
+    const hasOpenDay = hours.some((day) => day.isOpen);
+    if (!hasOpenDay) {
+      setFormError('Open at least one business day before saving hours');
+      return;
+    }
+
+    const invalidDay = hours.find((day) => day.isOpen && day.openTime >= day.closeTime);
+    if (invalidDay) {
+      setFormError(`Closing time must be later than opening time for ${t(`hours.days.${invalidDay.dayOfWeek}`)}`);
+      return;
+    }
+
+    setFormError(null);
     updateMutation.mutate({ hours: hours.map((h) => ({ dayOfWeek: h.dayOfWeek, isOpen: h.isOpen, openTime: h.openTime, closeTime: h.closeTime })) });
   };
 
@@ -68,6 +84,7 @@ export default function HoursPage() {
           <CardTitle className="font-display">{t('hours.title')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <FormErrorAlert title="Please fix your business hours" messages={formError ? [formError] : []} />
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -85,14 +102,20 @@ export default function HoursPage() {
                       type="time"
                       className="w-24 px-2 py-1 h-8"
                       value={h.openTime}
-                      onChange={(e) => setTime(h.dayOfWeek, 'openTime', e.target.value)}
+                      onChange={(e) => {
+                        setTime(h.dayOfWeek, 'openTime', e.target.value);
+                        if (formError) setFormError(null);
+                      }}
                     />
                     <span className="text-muted-foreground">—</span>
                     <Input
                       type="time"
                       className="w-24 px-2 py-1 h-8"
                       value={h.closeTime}
-                      onChange={(e) => setTime(h.dayOfWeek, 'closeTime', e.target.value)}
+                      onChange={(e) => {
+                        setTime(h.dayOfWeek, 'closeTime', e.target.value);
+                        if (formError) setFormError(null);
+                      }}
                     />
                   </div>
                 ) : (

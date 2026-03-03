@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
+import { FormErrorAlert } from '@/components/molecules/FormErrorAlert';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { useOnboardingStatus } from '@/hooks/useOnboarding';
 import { useServices, useCreateService, useUpdateService } from '@/hooks/useServices';
@@ -19,6 +20,7 @@ const formatPrice = (centavos: number, currency = 'COP') =>
   new Intl.NumberFormat('es-CO', { style: 'currency', currency }).format(centavos / 100);
 
 type DialogMode = 'create' | 'edit' | null;
+type ServiceFieldErrors = Partial<Record<'name' | 'durationMinutes' | 'priceInCents', string>>;
 
 export default function ServicesPage() {
   const { t } = useTranslation('backoffice');
@@ -37,6 +39,7 @@ export default function ServicesPage() {
   const [priceInCents, setPriceInCents] = useState('');
   const [currency] = useState('COP');
   const [isActive, setIsActive] = useState(true);
+  const [fieldErrors, setFieldErrors] = useState<ServiceFieldErrors>({});
 
   const openCreate = () => {
     setName('');
@@ -44,6 +47,7 @@ export default function ServicesPage() {
     setDurationMinutes('');
     setPriceInCents('');
     setIsActive(true);
+    setFieldErrors({});
     setEditingService(null);
     setDialogMode('create');
   };
@@ -54,6 +58,7 @@ export default function ServicesPage() {
     setDurationMinutes(String(s.durationMinutes));
     setPriceInCents(String(s.priceInCents));
     setIsActive(s.isActive);
+    setFieldErrors({});
     setEditingService(s);
     setDialogMode('edit');
   };
@@ -61,7 +66,14 @@ export default function ServicesPage() {
   const handleSave = () => {
     const duration = parseInt(durationMinutes, 10);
     const price = parseInt(priceInCents, 10);
-    if (!name || isNaN(duration) || isNaN(price)) return;
+    const nextErrors: ServiceFieldErrors = {};
+
+    if (!name.trim()) nextErrors.name = 'Service name is required';
+    if (isNaN(duration) || duration < 5) nextErrors.durationMinutes = 'Duration must be at least 5 minutes';
+    if (isNaN(price) || price < 0) nextErrors.priceInCents = 'Price must be 0 or greater';
+
+    setFieldErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
 
     if (dialogMode === 'create') {
       createMutation.mutate(
@@ -160,9 +172,22 @@ export default function ServicesPage() {
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
+            <FormErrorAlert
+              title="Please fix the service form"
+              messages={Object.values(fieldErrors).filter(Boolean) as string[]}
+            />
             <div>
               <Label htmlFor="svc-name">{t('services.serviceName')}</Label>
-              <Input id="svc-name" className="mt-1.5" value={name} onChange={(e) => setName(e.target.value)} />
+              <Input
+                id="svc-name"
+                className="mt-1.5"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (fieldErrors.name) setFieldErrors((prev) => ({ ...prev, name: undefined }));
+                }}
+              />
+              {fieldErrors.name ? <p className="mt-1 text-xs text-destructive">{fieldErrors.name}</p> : null}
             </div>
             <div>
               <Label htmlFor="svc-description">{t('services.description')}</Label>
@@ -171,11 +196,34 @@ export default function ServicesPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="svc-duration">{t('services.duration')} (min)</Label>
-                <Input id="svc-duration" type="number" min="5" className="mt-1.5" value={durationMinutes} onChange={(e) => setDurationMinutes(e.target.value)} />
+                <Input
+                  id="svc-duration"
+                  type="number"
+                  min="5"
+                  className="mt-1.5"
+                  value={durationMinutes}
+                  onChange={(e) => {
+                    setDurationMinutes(e.target.value);
+                    if (fieldErrors.durationMinutes) setFieldErrors((prev) => ({ ...prev, durationMinutes: undefined }));
+                  }}
+                />
+                {fieldErrors.durationMinutes ? <p className="mt-1 text-xs text-destructive">{fieldErrors.durationMinutes}</p> : null}
               </div>
               <div>
                 <Label htmlFor="svc-price">{t('services.price')} (centavos COP)</Label>
-                <Input id="svc-price" type="number" min="0" className="mt-1.5" placeholder="15000" value={priceInCents} onChange={(e) => setPriceInCents(e.target.value)} />
+                <Input
+                  id="svc-price"
+                  type="number"
+                  min="0"
+                  className="mt-1.5"
+                  placeholder="15000"
+                  value={priceInCents}
+                  onChange={(e) => {
+                    setPriceInCents(e.target.value);
+                    if (fieldErrors.priceInCents) setFieldErrors((prev) => ({ ...prev, priceInCents: undefined }));
+                  }}
+                />
+                {fieldErrors.priceInCents ? <p className="mt-1 text-xs text-destructive">{fieldErrors.priceInCents}</p> : null}
               </div>
             </div>
             {dialogMode === 'edit' && (

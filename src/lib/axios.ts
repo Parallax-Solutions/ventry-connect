@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ROUTES } from '@/constants/routes';
+import { normalizeApiError } from '@/lib/api-errors';
 import { buildAppUrl, isHashRouter } from '@/lib/router';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -54,14 +55,14 @@ api.interceptors.response.use(
       || originalRequest?.url?.includes('/auth/register');
 
     if (error.response?.status !== 401 || originalRequest._retry || isAuthRequest) {
-      return Promise.reject(error);
+      return Promise.reject(normalizeApiError(error));
     }
 
     // Don't retry refresh endpoint itself
     if (originalRequest.url?.includes('/auth/refresh')) {
       useAuthStore.getState().logout();
       redirectToLogin();
-      return Promise.reject(error);
+      return Promise.reject(normalizeApiError(error));
     }
 
     if (isRefreshing) {
@@ -84,7 +85,7 @@ api.interceptors.response.use(
       if (!refreshToken) {
         useAuthStore.getState().logout();
         redirectToLogin();
-        return Promise.reject(error);
+        return Promise.reject(normalizeApiError(error));
       }
 
       const { data } = await axios.post(`${API_BASE_URL}/api/auth/refresh`, { refreshToken });
@@ -97,7 +98,7 @@ api.interceptors.response.use(
       processQueue(refreshError, null);
       useAuthStore.getState().logout();
       redirectToLogin();
-      return Promise.reject(refreshError);
+      return Promise.reject(normalizeApiError(refreshError));
     } finally {
       isRefreshing = false;
     }

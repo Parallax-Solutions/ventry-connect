@@ -1,13 +1,28 @@
-import { useRef } from 'react';
-import type { ReactNode, RefObject } from 'react';
+import { useEffect } from 'react';
+import type { ReactNode } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
+import { FormErrorAlert } from '@/components/molecules/FormErrorAlert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useWhatsAppConfig, useWhatsAppSetup } from '@/hooks/useWhatsAppConfig';
+import { getErrorMessages } from '@/lib/api-errors';
 import { cn } from '@/lib/utils';
 import { Hash, Loader2, MessageSquare, Phone, Wifi, WifiOff } from 'lucide-react';
+
+const whatsAppSchema = z.object({
+  appId: z.string().trim().min(1, 'App ID is required'),
+  appSecret: z.string().trim().min(1, 'App Secret is required'),
+  code: z.string().trim().min(1, 'Authorization code is required'),
+  wabaId: z.string().trim().min(1, 'WABA ID is required'),
+  phoneNumberId: z.string().trim().min(1, 'Phone Number ID is required'),
+});
+
+type WhatsAppSetupValues = z.infer<typeof whatsAppSchema>;
 
 interface WhatsAppSetupPanelProps {
   embedded?: boolean;
@@ -20,26 +35,36 @@ export default function WhatsAppSetupPanel({
 }: WhatsAppSetupPanelProps) {
   const { data: config, isLoading } = useWhatsAppConfig();
   const setupMutation = useWhatsAppSetup();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<WhatsAppSetupValues>({
+    resolver: zodResolver(whatsAppSchema),
+  });
 
-  const appIdRef = useRef<HTMLInputElement>(null);
-  const appSecretRef = useRef<HTMLInputElement>(null);
-  const codeRef = useRef<HTMLInputElement>(null);
-  const wabaIdRef = useRef<HTMLInputElement>(null);
-  const phoneNumberIdRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const subscription = watch(() => {
+      if (setupMutation.error) {
+        setupMutation.reset();
+      }
+    });
 
-  const handleConnect = () => {
-    setupMutation.mutate(
-      {
-        appId: appIdRef.current?.value ?? '',
-        appSecret: appSecretRef.current?.value ?? '',
-        code: codeRef.current?.value ?? '',
-        wabaId: wabaIdRef.current?.value ?? '',
-        phoneNumberId: phoneNumberIdRef.current?.value ?? '',
-      },
-      {
-        onSuccess: () => onConfigured?.(),
-      },
-    );
+    return () => subscription.unsubscribe();
+  }, [setupMutation, watch]);
+
+  const serverErrors = setupMutation.error
+    ? getErrorMessages(
+        setupMutation.error,
+        'We could not connect WhatsApp. Confirm the credentials and try again.',
+      )
+    : [];
+
+  const onSubmit = (data: WhatsAppSetupValues) => {
+    setupMutation.mutate(data, {
+      onSuccess: () => onConfigured?.(),
+    });
   };
 
   if (isLoading) {
@@ -97,12 +122,63 @@ export default function WhatsAppSetupPanel({
     );
   }
 
+  const panelContent = (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <FormErrorAlert title="Unable to connect WhatsApp" messages={serverErrors} />
+
+      <div
+        className={cn(
+          'rounded-lg border p-4 text-sm',
+          embedded
+            ? 'border-primary/15 bg-background/80 text-foreground'
+            : 'border-info/20 bg-info/5 text-info',
+        )}
+      >
+        <MessageSquare className="mr-2 inline h-4 w-4" />
+        WhatsApp integration allows clients to book appointments directly through WhatsApp messages.
+      </div>
+
+      <div className="space-y-4">
+        <p className="text-sm font-medium">Manual Setup (temporary)</p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="App ID" error={errors.appId?.message}>
+            <Input {...register('appId')} className="mt-1.5" placeholder="Meta App ID" autoComplete="off" />
+          </Field>
+          <Field label="App Secret" error={errors.appSecret?.message}>
+            <Input {...register('appSecret')} className="mt-1.5" type="password" placeholder="Meta App Secret" autoComplete="off" />
+          </Field>
+          <Field label="Authorization Code" error={errors.code?.message}>
+            <Input {...register('code')} className="mt-1.5" placeholder="Code from Meta Business" autoComplete="off" />
+          </Field>
+          <Field label="WABA ID" error={errors.wabaId?.message}>
+            <Input {...register('wabaId')} className="mt-1.5" placeholder="WhatsApp Business Account ID" autoComplete="off" />
+          </Field>
+          <Field label="Phone Number ID" error={errors.phoneNumberId?.message}>
+            <Input {...register('phoneNumberId')} className="mt-1.5" placeholder="Phone number ID" autoComplete="off" />
+          </Field>
+        </div>
+
+        <Button
+          type="submit"
+          className={cn(
+            'w-full border-0 text-white',
+            embedded ? 'gradient-primary h-11' : 'gradient-primary',
+          )}
+          disabled={setupMutation.isPending}
+        >
+          {setupMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          Connect WhatsApp
+        </Button>
+      </div>
+    </form>
+  );
+
   if (!embedded) {
     return (
       <Card className="max-w-2xl">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
               <WifiOff className="h-5 w-5 text-muted-foreground" />
             </div>
             <div>
@@ -111,17 +187,7 @@ export default function WhatsAppSetupPanel({
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <WhatsAppSetupForm
-            appIdRef={appIdRef}
-            appSecretRef={appSecretRef}
-            codeRef={codeRef}
-            wabaIdRef={wabaIdRef}
-            phoneNumberIdRef={phoneNumberIdRef}
-            isPending={setupMutation.isPending}
-            onConnect={handleConnect}
-          />
-        </CardContent>
+        <CardContent>{panelContent}</CardContent>
       </Card>
     );
   }
@@ -139,93 +205,25 @@ export default function WhatsAppSetupPanel({
           </p>
         </div>
       </div>
-
-      <WhatsAppSetupForm
-        appIdRef={appIdRef}
-        appSecretRef={appSecretRef}
-        codeRef={codeRef}
-        wabaIdRef={wabaIdRef}
-        phoneNumberIdRef={phoneNumberIdRef}
-        isPending={setupMutation.isPending}
-        onConnect={handleConnect}
-        embedded
-      />
+      {panelContent}
     </div>
   );
 }
 
-interface WhatsAppSetupFormProps {
-  appIdRef: RefObject<HTMLInputElement>;
-  appSecretRef: RefObject<HTMLInputElement>;
-  codeRef: RefObject<HTMLInputElement>;
-  wabaIdRef: RefObject<HTMLInputElement>;
-  phoneNumberIdRef: RefObject<HTMLInputElement>;
-  isPending: boolean;
-  onConnect: () => void;
-  embedded?: boolean;
-}
-
-function WhatsAppSetupForm({
-  appIdRef,
-  appSecretRef,
-  codeRef,
-  wabaIdRef,
-  phoneNumberIdRef,
-  isPending,
-  onConnect,
-  embedded = false,
-}: WhatsAppSetupFormProps) {
-  return (
-    <div className="space-y-6">
-      <div className={cn(
-        'rounded-lg border p-4 text-sm',
-        embedded ? 'border-primary/15 bg-background/80 text-foreground' : 'border-info/20 bg-info/5 text-info',
-      )}>
-        <MessageSquare className="mr-2 inline h-4 w-4" />
-        WhatsApp integration allows clients to book appointments directly through WhatsApp messages.
-      </div>
-
-      <div className="space-y-4">
-        <p className="text-sm font-medium">Manual Setup (temporary)</p>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="App ID">
-            <Input ref={appIdRef} className="mt-1.5" placeholder="Meta App ID" />
-          </Field>
-          <Field label="App Secret">
-            <Input ref={appSecretRef} className="mt-1.5" type="password" placeholder="Meta App Secret" />
-          </Field>
-          <Field label="Authorization Code">
-            <Input ref={codeRef} className="mt-1.5" placeholder="Code from Meta Business" />
-          </Field>
-          <Field label="WABA ID">
-            <Input ref={wabaIdRef} className="mt-1.5" placeholder="WhatsApp Business Account ID" />
-          </Field>
-          <Field label="Phone Number ID">
-            <Input ref={phoneNumberIdRef} className="mt-1.5" placeholder="Phone number ID" />
-          </Field>
-        </div>
-
-        <Button
-          className={cn(
-            'w-full border-0 text-white',
-            embedded ? 'gradient-primary h-11' : 'gradient-primary',
-          )}
-          disabled={isPending}
-          onClick={onConnect}
-        >
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Connect WhatsApp
-        </Button>
-      </div>
-    </div>
-  );
-}
-
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Field({
+  label,
+  error,
+  children,
+}: {
+  label: string;
+  error?: string;
+  children: ReactNode;
+}) {
   return (
     <div>
       <Label>{label}</Label>
       {children}
+      {error ? <p className="mt-1 text-xs text-destructive">{error}</p> : null}
     </div>
   );
 }

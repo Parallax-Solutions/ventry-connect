@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '@/api/auth';
 import { useAuthStore } from '@/stores/authStore';
-import { toast } from 'sonner';
 import { ROUTES } from '@/constants/routes';
 import type { LoginRequest, RegisterRequest } from '@/types';
 
@@ -21,9 +20,6 @@ export function useLogin() {
 
       navigate(destination);
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Invalid email or password');
-    },
   });
 }
 
@@ -36,9 +32,6 @@ export function useRegister() {
     onSuccess: (data) => {
       login(data.user, data.accessToken, data.refreshToken);
       navigate(ROUTES.TENANT.ONBOARDING);
-    },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Registration failed');
     },
   });
 }
