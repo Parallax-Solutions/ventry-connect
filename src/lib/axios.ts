@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { ROUTES } from '@/constants/routes';
+import { buildAppUrl, isHashRouter } from '@/lib/router';
 import { useAuthStore } from '@/stores/authStore';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -9,10 +11,14 @@ const api = axios.create({
 });
 
 const redirectToLogin = () => {
-  const baseUrl = import.meta.env.BASE_URL || '/';
-  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-  const loginUrl = new URL('login', `${window.location.origin}${normalizedBaseUrl}`);
-  window.history.replaceState(null, '', `${loginUrl.pathname}${loginUrl.search}`);
+  const loginUrl = buildAppUrl(ROUTES.LOGIN);
+  if (isHashRouter) {
+    window.location.replace(loginUrl);
+    return;
+  }
+
+  const nextUrl = new URL(loginUrl);
+  window.history.replaceState(null, '', `${nextUrl.pathname}${nextUrl.search}`);
   window.dispatchEvent(new PopStateEvent('popstate'));
 };
 
