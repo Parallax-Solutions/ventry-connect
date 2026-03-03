@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,13 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FormErrorAlert } from '@/components/molecules/FormErrorAlert';
 import { getErrorMessages } from '@/lib/api-errors';
 
-const baseSchema = z.object({
-  email: z.string().trim().min(1, 'Email is required').email('Enter a valid email address'),
-  password: z.string().min(8, 'Password must contain at least 8 characters'),
-  role: z.enum(['ADMIN', 'STAFF']).optional(),
-});
-
-type UserCreateFormValues = z.infer<typeof baseSchema>;
+type UserDialogFormValues = {
+  email: string;
+  password?: string;
+  role?: 'ADMIN' | 'STAFF';
+};
 
 interface RoleOption {
   value: 'ADMIN' | 'STAFF';
@@ -34,7 +32,9 @@ interface UserCreateDialogProps {
   isPending: boolean;
   error?: unknown;
   onResetError?: () => void;
-  onSubmit: (values: { email: string; password: string; role?: 'ADMIN' | 'STAFF' }) => void;
+  initialValues?: { email: string; role?: 'ADMIN' | 'STAFF' };
+  showPassword?: boolean;
+  onSubmit: (values: { email: string; password?: string; role?: 'ADMIN' | 'STAFF' }) => void;
 }
 
 export function UserCreateDialog({
@@ -47,8 +47,22 @@ export function UserCreateDialog({
   isPending,
   error,
   onResetError,
+  initialValues,
+  showPassword = true,
   onSubmit,
 }: UserCreateDialogProps) {
+  const schema = useMemo(
+    () =>
+      z.object({
+        email: z.string().trim().min(1, 'Email is required').email('Enter a valid email address'),
+        password: showPassword
+          ? z.string().min(8, 'Password must contain at least 8 characters')
+          : z.string().optional(),
+        role: z.enum(['ADMIN', 'STAFF']).optional(),
+      }),
+    [showPassword],
+  );
+
   const {
     register,
     watch,
@@ -56,24 +70,24 @@ export function UserCreateDialog({
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserCreateFormValues>({
-    resolver: zodResolver(baseSchema),
+  } = useForm<UserDialogFormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      email: '',
+      email: initialValues?.email ?? '',
       password: '',
-      role: roleOptions?.[0]?.value,
+      role: initialValues?.role ?? roleOptions?.[0]?.value,
     },
   });
 
   useEffect(() => {
     if (open) {
       reset({
-        email: '',
+        email: initialValues?.email ?? '',
         password: '',
-        role: roleOptions?.[0]?.value,
+        role: initialValues?.role ?? roleOptions?.[0]?.value,
       });
     }
-  }, [open, reset, roleOptions]);
+  }, [initialValues, open, reset, roleOptions]);
 
   useEffect(() => {
     const subscription = watch(() => {
@@ -102,7 +116,7 @@ export function UserCreateDialog({
           onSubmit={handleSubmit((values) => {
             onSubmit({
               email: values.email.trim(),
-              password: values.password,
+              password: showPassword ? values.password : undefined,
               role: roleOptions ? values.role : undefined,
             });
           })}
@@ -113,17 +127,19 @@ export function UserCreateDialog({
             {errors.email ? <p className="mt-1 text-xs text-destructive">{errors.email.message}</p> : null}
           </div>
 
-          <div>
-            <Label htmlFor="user-password">Password</Label>
-            <Input
-              id="user-password"
-              type="password"
-              className="mt-1.5"
-              autoComplete="new-password"
-              {...register('password')}
-            />
-            {errors.password ? <p className="mt-1 text-xs text-destructive">{errors.password.message}</p> : null}
-          </div>
+          {showPassword ? (
+            <div>
+              <Label htmlFor="user-password">Password</Label>
+              <Input
+                id="user-password"
+                type="password"
+                className="mt-1.5"
+                autoComplete="new-password"
+                {...register('password')}
+              />
+              {errors.password ? <p className="mt-1 text-xs text-destructive">{errors.password.message}</p> : null}
+            </div>
+          ) : null}
 
           {roleOptions ? (
             <div>

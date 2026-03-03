@@ -1,6 +1,6 @@
+import { lazy, Suspense, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { KPICard } from '@/components/molecules/KPICard';
@@ -12,37 +12,44 @@ import { formatClientName } from '@/lib/utils';
 import { ROUTES } from '@/constants/routes';
 import { CalendarDays, Clock, XCircle, Scissors, Plus, Settings, ArrowRight, CheckCircle2, Circle, Loader2 } from 'lucide-react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { startOfWeek, addDays, format, parseISO, isSameDay } from 'date-fns';
+import { startOfWeek, addDays, format } from 'date-fns';
+
+const DashboardWeeklyTrendCard = lazy(() => import('@/components/organisms/DashboardWeeklyTrendCard'));
 
 export default function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
-  const { user } = useAuthStore();
   const { data: bookings = [], isLoading: bookingsLoading } = useBookings();
   const { data: services = [] } = useServices();
   const { data: onboardingStatus } = useOnboardingStatus();
-
-  const today = new Date().toISOString().slice(0, 10);
-  const todayBookings = bookings.filter((b) => b.scheduledDate === today).length;
-  const upcoming = bookings.filter((b) => b.status === 'CONFIRMED' || b.status === 'PENDING').length;
-  const cancellations = bookings.filter((b) => b.status === 'CANCELLED').length;
-  const activeServices = services.filter((s) => s.isActive).length;
-
-  // Weekly chart data
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
-  const weekData = Array.from({ length: 7 }, (_, i) => {
-    const day = addDays(weekStart, i);
-    const dayStr = format(day, 'yyyy-MM-dd');
-    const count = bookings.filter((b) => b.scheduledDate === dayStr).length;
-    return { day: format(day, 'EEE'), bookings: count };
-  });
-
-  const onboardingSteps = [
-    { key: 'servicesConfigured', done: onboardingStatus?.hasServices ?? false },
-    { key: 'whatsappConnected', done: onboardingStatus?.hasWhatsApp ?? false },
-    { key: 'hoursConfigured', done: onboardingStatus?.hasHours ?? false },
-    { key: 'readyToGoLive', done: onboardingStatus?.isComplete ?? false },
-  ];
+  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const summary = useMemo(
+    () => ({
+      todayBookings: bookings.filter((b) => b.scheduledDate === today).length,
+      upcoming: bookings.filter((b) => b.status === 'CONFIRMED' || b.status === 'PENDING').length,
+      cancellations: bookings.filter((b) => b.status === 'CANCELLED').length,
+      activeServices: services.filter((s) => s.isActive).length,
+    }),
+    [bookings, services, today],
+  );
+  const weekData = useMemo(() => {
+    const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+    return Array.from({ length: 7 }, (_, i) => {
+      const day = addDays(weekStart, i);
+      const dayStr = format(day, 'yyyy-MM-dd');
+      const count = bookings.filter((b) => b.scheduledDate === dayStr).length;
+      return { day: format(day, 'EEE'), bookings: count };
+    });
+  }, [bookings]);
+  const recentBookings = useMemo(() => bookings.slice(0, 5), [bookings]);
+  const onboardingSteps = useMemo(
+    () => [
+      { key: 'servicesConfigured', done: onboardingStatus?.hasServices ?? false },
+      { key: 'whatsappConnected', done: onboardingStatus?.hasWhatsApp ?? false },
+      { key: 'hoursConfigured', done: onboardingStatus?.hasHours ?? false },
+      { key: 'readyToGoLive', done: onboardingStatus?.isComplete ?? false },
+    ],
+    [onboardingStatus],
+  );
 
   return (
     <div className="space-y-8">
@@ -53,33 +60,26 @@ export default function DashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard title={t('dashboard:kpi.todayBookings')} value={todayBookings} icon={CalendarDays} />
-        <KPICard title={t('dashboard:kpi.upcoming')} value={upcoming} icon={Clock} />
-        <KPICard title={t('dashboard:kpi.cancellations')} value={cancellations} icon={XCircle} />
-        <KPICard title={t('dashboard:kpi.activeServices')} value={activeServices} icon={Scissors} />
+        <KPICard title={t('dashboard:kpi.todayBookings')} value={summary.todayBookings} icon={CalendarDays} />
+        <KPICard title={t('dashboard:kpi.upcoming')} value={summary.upcoming} icon={Clock} />
+        <KPICard title={t('dashboard:kpi.cancellations')} value={summary.cancellations} icon={XCircle} />
+        <KPICard title={t('dashboard:kpi.activeServices')} value={summary.activeServices} icon={Scissors} />
       </div>
 
-      {/* Weekly chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-display">{t('dashboard:weeklyTrend', { defaultValue: 'This Week' })}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={weekData}>
-                <XAxis dataKey="day" tick={{ fontSize: 12 }} tickLine={false} axisLine={false} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 12 }} tickLine={false} axisLine={false} width={30} />
-                <Tooltip
-                  contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', background: 'hsl(var(--background))' }}
-                  labelStyle={{ fontWeight: 600 }}
-                />
-                <Bar dataKey="bookings" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+      <Suspense
+        fallback={
+          <Card>
+            <CardContent className="flex h-48 items-center justify-center">
+              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            </CardContent>
+          </Card>
+        }
+      >
+        <DashboardWeeklyTrendCard
+          title={t('dashboard:weeklyTrend', { defaultValue: 'This Week' })}
+          data={weekData}
+        />
+      </Suspense>
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Bookings */}
@@ -109,7 +109,7 @@ export default function DashboardPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {bookings.slice(0, 5).map((b) => (
+                  {recentBookings.map((b) => (
                     <TableRow key={b.id}>
                       <TableCell className="font-medium">{b.client ? formatClientName(b.client) : '—'}</TableCell>
                       <TableCell>{b.service?.name ?? '—'}</TableCell>

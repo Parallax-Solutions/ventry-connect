@@ -1,7 +1,7 @@
 // ─── Auth & Users ───────────────────────────────────────
 export type UserRole = 'VENTRY_ADMIN' | 'OWNER' | 'ADMIN' | 'STAFF';
 export type UserScope = 'PLATFORM' | 'TENANT';
-export type UserStatus = 'ACTIVE' | 'INACTIVE';
+export type UserStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED';
 
 export interface User {
   id: string;
@@ -175,6 +175,17 @@ export interface CreateTenantUserRequest {
   email: string;
   password: string;
   role: 'ADMIN' | 'STAFF';
+}
+
+export interface UpdatePlatformUserRequest {
+  email?: string;
+  status?: 'ACTIVE' | 'INACTIVE';
+}
+
+export interface UpdateTenantUserRequest {
+  email?: string;
+  role?: 'ADMIN' | 'STAFF';
+  status?: 'ACTIVE' | 'INACTIVE';
 }
 
 // ─── Business Hours ──────────────────────────────────────
