@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { BrandMark } from '@/components/atoms/BrandMark';
 import { LanguageSwitcher } from '@/components/atoms/LanguageSwitcher';
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
-import { Menu, X, MessageCircle } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 
 export function LandingHeader() {
@@ -22,10 +23,7 @@ export function LandingHeader() {
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
       <div className="container mx-auto flex items-center justify-between h-16 px-4 lg:px-8">
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
-            <MessageCircle className="h-4 w-4 text-white" />
-          </div>
-          <span className="font-display font-bold text-xl">Ventry</span>
+          <BrandMark />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

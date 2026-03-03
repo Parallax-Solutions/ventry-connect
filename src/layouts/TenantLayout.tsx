@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ROUTES, TENANT_SETUP_ROUTES } from '@/constants/routes';
+import { BrandMark } from '@/components/atoms/BrandMark';
 import { LanguageSwitcher } from '@/components/atoms/LanguageSwitcher';
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard, Settings as SettingsIcon, Scissors, Clock, CalendarDays,
-  Users, Bell, Palette, Menu, MessageCircle, ChevronRight,
+  Users, Bell, Palette, Menu, ChevronRight,
   CreditCard, ShoppingBag, Heart, Truck, UserCircle, Lock, Search, User, LogOut, UsersRound, MessageSquare, X,
 } from 'lucide-react';
 import {
@@ -71,11 +72,8 @@ export default function TenantLayout() {
 
   const SidebarContent = () => (
     <>
-      <div className="p-4 flex items-center gap-2 border-b border-sidebar-border">
-        <div className="h-8 w-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-          <MessageCircle className="h-4 w-4 text-white" />
-        </div>
-        <span className="font-display font-bold text-lg text-sidebar-foreground">Ventry</span>
+      <div className="border-b border-sidebar-border p-4">
+        <BrandMark titleClassName="text-lg text-sidebar-foreground" subtitleClassName="text-sidebar-foreground/50" />
       </div>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
@@ -121,12 +119,7 @@ export default function TenantLayout() {
     return (
       <div className="min-h-screen bg-background">
         <header className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border h-16 flex items-center px-4 lg:px-8 gap-4">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <MessageCircle className="h-4 w-4 text-white" />
-            </div>
-            <span className="font-display font-bold text-lg">Ventry</span>
-          </div>
+          <BrandMark titleClassName="text-lg" />
           <div className="flex-1" />
           <LanguageSwitcher variant="ghost" />
           <ThemeToggle />

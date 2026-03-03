@@ -3,10 +3,11 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { useLogout } from '@/hooks/useAuth';
 import { ROUTES } from '@/constants/routes';
+import { BrandMark } from '@/components/atoms/BrandMark';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import {
-  Building2, Users, MessageCircle, LogOut, User, Menu,
+  Building2, Users, LogOut, User, Menu,
 } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
@@ -29,14 +30,12 @@ export default function PlatformLayout() {
 
   const SidebarContent = () => (
     <>
-      <div className="p-4 flex items-center gap-2 border-b border-sidebar-border">
-        <div className="h-8 w-8 rounded-lg bg-sidebar-primary flex items-center justify-center">
-          <MessageCircle className="h-4 w-4 text-white" />
-        </div>
-        <div>
-          <span className="font-display font-bold text-lg text-sidebar-foreground">Ventry</span>
-          <p className="text-[10px] text-sidebar-foreground/50 uppercase tracking-wider">Platform</p>
-        </div>
+      <div className="border-b border-sidebar-border p-4">
+        <BrandMark
+          titleClassName="text-lg text-sidebar-foreground"
+          subtitle="Platform"
+          subtitleClassName="text-sidebar-foreground/50"
+        />
       </div>
 
       <nav className="flex-1 p-3 space-y-1">

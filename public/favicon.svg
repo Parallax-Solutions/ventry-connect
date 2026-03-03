@@ -1,19 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
   <defs>
-    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1a7a6e"/>
-      <stop offset="100%" stop-color="#e87050"/>
+    <linearGradient id="ventry-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f4f49" />
+      <stop offset="100%" stop-color="#e87050" />
     </linearGradient>
   </defs>
-  <!-- Rounded background -->
-  <rect width="64" height="64" rx="14" fill="url(#grad)"/>
-  <!-- V shape -->
+  <rect width="64" height="64" rx="14" fill="url(#ventry-gradient)" />
   <polyline
-    points="14,18 32,46 50,18"
+    points="16,18 32,44 48,18"
     fill="none"
-    stroke="white"
-    stroke-width="9"
+    stroke="rgba(255,255,255,0.22)"
+    stroke-width="10"
     stroke-linecap="round"
     stroke-linejoin="round"
   />
+  <polyline
+    points="16,16 32,42 48,16"
+    fill="none"
+    stroke="#ffffff"
+    stroke-width="7"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <circle cx="45" cy="12" r="4" fill="#f7cd60" />
 </svg>

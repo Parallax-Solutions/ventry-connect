@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { MessageCircle } from 'lucide-react';
+import { BrandMark } from '@/components/atoms/BrandMark';
 
 export function LandingFooter() {
   const { t } = useTranslation('landing');
@@ -14,10 +14,7 @@ export function LandingFooter() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
-                <MessageCircle className="h-4 w-4 text-white" />
-              </div>
-              <span className="font-display font-bold text-xl">{t('footer.description', { defaultValue: 'Ventry' }).substring(0, 6)}</span>
+              <BrandMark />
             </div>
             <p className="text-sm text-background/60">{t('footer.description')}</p>
           </div>
