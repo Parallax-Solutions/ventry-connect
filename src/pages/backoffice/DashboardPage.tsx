@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,16 +17,10 @@ import { startOfWeek, addDays, format, parseISO, isSameDay } from 'date-fns';
 
 export default function DashboardPage() {
   const { t } = useTranslation(['dashboard', 'common']);
-  const { onboardingComplete, user } = useAuthStore();
+  const { user } = useAuthStore();
   const { data: bookings = [], isLoading: bookingsLoading } = useBookings();
   const { data: services = [] } = useServices();
   const { data: onboardingStatus } = useOnboardingStatus();
-
-  // Redirect owner to onboarding if not completed
-  const needsOnboarding = (user?.role === 'OWNER') && !onboardingComplete;
-  if (needsOnboarding) {
-    return <Navigate to={ROUTES.TENANT.ONBOARDING} replace />;
-  }
 
   const today = new Date().toISOString().slice(0, 10);
   const todayBookings = bookings.filter((b) => b.scheduledDate === today).length;
@@ -46,7 +40,7 @@ export default function DashboardPage() {
   const onboardingSteps = [
     { key: 'servicesConfigured', done: onboardingStatus?.hasServices ?? false },
     { key: 'whatsappConnected', done: onboardingStatus?.hasWhatsApp ?? false },
-    { key: 'hoursConfigured', done: true },
+    { key: 'hoursConfigured', done: onboardingStatus?.hasHours ?? false },
     { key: 'readyToGoLive', done: onboardingStatus?.isComplete ?? false },
   ];
 

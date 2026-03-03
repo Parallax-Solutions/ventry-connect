@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import type { WhatsAppSetupRequest } from '@/types';
 
 const WHATSAPP_KEY = ['whatsapp-config'] as const;
+const ONBOARDING_STATUS_KEY = ['onboarding', 'status'] as const;
 
 export function useWhatsAppConfig() {
   return useQuery({
@@ -20,6 +21,7 @@ export function useWhatsAppSetup() {
     mutationFn: (data: WhatsAppSetupRequest) => whatsappApi.setup(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: WHATSAPP_KEY });
+      qc.invalidateQueries({ queryKey: ONBOARDING_STATUS_KEY });
       toast.success('WhatsApp configured successfully');
     },
     onError: (error: Error) => {

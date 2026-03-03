@@ -3,6 +3,7 @@ import { hoursApi, type UpdateBusinessHoursRequest } from '@/api/hours';
 import { toast } from 'sonner';
 
 const HOURS_KEY = ['hours'] as const;
+const ONBOARDING_STATUS_KEY = ['onboarding', 'status'] as const;
 
 export function useHours() {
   return useQuery({
@@ -18,6 +19,7 @@ export function useUpdateHours() {
     mutationFn: (data: UpdateBusinessHoursRequest) => hoursApi.updateAll(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: HOURS_KEY });
+      qc.invalidateQueries({ queryKey: ONBOARDING_STATUS_KEY });
       toast.success('Business hours saved');
     },
     onError: (error: Error) => {

@@ -7,12 +7,18 @@ import { Label } from '@/components/ui/label';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { useWhatsAppConfig, useWhatsAppSetup } from '@/hooks/useWhatsAppConfig';
+import { useOnboardingStatus } from '@/hooks/useOnboarding';
 import { ROUTES } from '@/constants/routes';
 import { MessageSquare, Wifi, WifiOff, Phone, Hash, Loader2 } from 'lucide-react';
 
 export default function WhatsAppSetupPage() {
   const { data: config, isLoading } = useWhatsAppConfig();
+  const { data: onboardingStatus } = useOnboardingStatus();
   const setupMutation = useWhatsAppSetup();
+  const backRoute = onboardingStatus?.tenantStatus === 'READY'
+    ? ROUTES.TENANT.DASHBOARD
+    : ROUTES.TENANT.ONBOARDING;
+  const backLabel = onboardingStatus?.tenantStatus === 'READY' ? 'Dashboard' : 'Onboarding';
 
   const appIdRef = useRef<HTMLInputElement>(null);
   const appSecretRef = useRef<HTMLInputElement>(null);
@@ -44,7 +50,7 @@ export default function WhatsAppSetupPage() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink asChild><Link to={ROUTES.TENANT.DASHBOARD}>Dashboard</Link></BreadcrumbLink>
+              <BreadcrumbLink asChild><Link to={backRoute}>{backLabel}</Link></BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -88,11 +94,11 @@ export default function WhatsAppSetupPage() {
 
   return (
     <div className="space-y-8">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild><Link to={ROUTES.TENANT.DASHBOARD}>Dashboard</Link></BreadcrumbLink>
-          </BreadcrumbItem>
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild><Link to={backRoute}>{backLabel}</Link></BreadcrumbLink>
+            </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage>WhatsApp</BreadcrumbPage>

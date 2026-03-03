@@ -21,3 +21,10 @@ export const ROUTES = {
     HOURS: '/hours',
   },
 } as const;
+
+export const TENANT_SETUP_ROUTES = [
+  ROUTES.TENANT.ONBOARDING,
+  ROUTES.TENANT.WHATSAPP_SETUP,
+  ROUTES.TENANT.SERVICES,
+  ROUTES.TENANT.HOURS,
+] as const;

@@ -8,6 +8,14 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+const redirectToLogin = () => {
+  const baseUrl = import.meta.env.BASE_URL || '/';
+  const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const loginUrl = new URL('login', `${window.location.origin}${normalizedBaseUrl}`);
+  window.history.replaceState(null, '', `${loginUrl.pathname}${loginUrl.search}`);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+};
+
 // Request interceptor: inject Authorization header
 api.interceptors.request.use((config) => {
   const { accessToken } = useAuthStore.getState();
@@ -36,15 +44,17 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const isAuthRequest = originalRequest?.url?.includes('/auth/login')
+      || originalRequest?.url?.includes('/auth/register');
 
-    if (error.response?.status !== 401 || originalRequest._retry) {
+    if (error.response?.status !== 401 || originalRequest._retry || isAuthRequest) {
       return Promise.reject(error);
     }
 
     // Don't retry refresh endpoint itself
     if (originalRequest.url?.includes('/auth/refresh')) {
       useAuthStore.getState().logout();
-      window.location.href = '/login';
+      redirectToLogin();
       return Promise.reject(error);
     }
 
@@ -65,7 +75,11 @@ api.interceptors.response.use(
 
     try {
       const { refreshToken } = useAuthStore.getState();
-      if (!refreshToken) throw new Error('No refresh token');
+      if (!refreshToken) {
+        useAuthStore.getState().logout();
+        redirectToLogin();
+        return Promise.reject(error);
+      }
 
       const { data } = await axios.post(`${API_BASE_URL}/api/auth/refresh`, { refreshToken });
       useAuthStore.getState().setTokens(data.accessToken, data.refreshToken);
@@ -76,7 +90,7 @@ api.interceptors.response.use(
     } catch (refreshError) {
       processQueue(refreshError, null);
       useAuthStore.getState().logout();
-      window.location.href = '/login';
+      redirectToLogin();
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

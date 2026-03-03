@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ROUTES } from '@/constants/routes';
+import { ROUTES, TENANT_SETUP_ROUTES } from '@/constants/routes';
 import { LanguageSwitcher } from '@/components/atoms/LanguageSwitcher';
 import { ThemeToggle } from '@/components/atoms/ThemeToggle';
-import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/stores/authStore';
@@ -52,13 +51,14 @@ const futureNav = [
 export default function TenantLayout() {
   const { t } = useTranslation('backoffice');
   const location = useLocation();
-  const { user } = useAuthStore();
+  const { user, tenantStatus } = useAuthStore();
   const logout = useLogout();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const isOnboarding = location.pathname === ROUTES.TENANT.ONBOARDING;
-
   const userRole = user?.role ?? 'OWNER';
+  const isSetupExperience = userRole === 'OWNER'
+    && tenantStatus !== 'READY'
+    && TENANT_SETUP_ROUTES.includes(location.pathname as typeof TENANT_SETUP_ROUTES[number]);
 
   const visibleNav = mainNav.filter(
     (item) => !item.roles || item.roles.includes(userRole),
@@ -117,7 +117,7 @@ export default function TenantLayout() {
   );
 
   // During onboarding, show a minimal layout without sidebar
-  if (isOnboarding) {
+  if (isSetupExperience) {
     return (
       <div className="min-h-screen bg-background">
         <header className="sticky top-0 z-20 bg-background/95 backdrop-blur border-b border-border h-16 flex items-center px-4 lg:px-8 gap-4">

@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 import type { CreateServiceRequest, UpdateServiceRequest } from '@/types';
 
 const SERVICES_KEY = ['services'] as const;
+const ONBOARDING_STATUS_KEY = ['onboarding', 'status'] as const;
 
 export function useServices() {
   return useQuery({
@@ -19,6 +20,7 @@ export function useCreateService() {
     mutationFn: (data: CreateServiceRequest) => servicesApi.create(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: SERVICES_KEY });
+      qc.invalidateQueries({ queryKey: ONBOARDING_STATUS_KEY });
       toast.success('Service created successfully');
     },
     onError: (error: Error) => {
@@ -35,6 +37,7 @@ export function useUpdateService() {
       servicesApi.update(id, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: SERVICES_KEY });
+      qc.invalidateQueries({ queryKey: ONBOARDING_STATUS_KEY });
       toast.success('Service updated successfully');
     },
     onError: (error: Error) => {

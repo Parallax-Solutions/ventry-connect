@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,8 +8,10 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { StatusBadge } from '@/components/atoms/StatusBadge';
 import { EmptyState } from '@/components/molecules/EmptyState';
+import { useOnboardingStatus } from '@/hooks/useOnboarding';
 import { useServices, useCreateService, useUpdateService } from '@/hooks/useServices';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { ROUTES } from '@/constants/routes';
 import { Plus, Scissors, Clock, DollarSign, Loader2, Pencil } from 'lucide-react';
 import type { Service } from '@/types';
 
@@ -19,6 +22,7 @@ type DialogMode = 'create' | 'edit' | null;
 
 export default function ServicesPage() {
   const { t } = useTranslation('backoffice');
+  const { data: onboardingStatus } = useOnboardingStatus();
   const { data: services = [], isLoading } = useServices();
   const createMutation = useCreateService();
   const updateMutation = useUpdateService();
@@ -81,6 +85,13 @@ export default function ServicesPage() {
 
   return (
     <div className="space-y-8">
+      {onboardingStatus?.tenantStatus !== 'READY' && (
+        <div>
+          <Link to={ROUTES.TENANT.ONBOARDING}>
+            <Button variant="ghost" className="px-0">Back to onboarding</Button>
+          </Link>
+        </div>
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-display font-bold">{t('services.title')}</h1>

@@ -205,7 +205,10 @@ export interface NotificationTemplate {
 export interface OnboardingStatus {
   hasWhatsApp: boolean;
   hasServices: boolean;
+  hasHours: boolean;
   hasTeam: boolean;
+  canComplete: boolean;
+  tenantStatus: TenantStatus;
   isComplete: boolean;
 }
 

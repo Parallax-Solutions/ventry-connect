@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 import { useHours, useUpdateHours } from '@/hooks/useHours';
+import { useOnboardingStatus } from '@/hooks/useOnboarding';
+import { ROUTES } from '@/constants/routes';
 import type { BusinessHours, DayOfWeek } from '@/types';
 
 const DAYS: DayOfWeek[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -19,6 +22,7 @@ const DEFAULT_HOURS: BusinessHours[] = DAYS.map((day, i) => ({
 
 export default function HoursPage() {
   const { t } = useTranslation('backoffice');
+  const { data: onboardingStatus } = useOnboardingStatus();
   const { data: serverHours, isLoading } = useHours();
   const updateMutation = useUpdateHours();
   const [hours, setHours] = useState<BusinessHours[]>(DEFAULT_HOURS);
@@ -47,6 +51,13 @@ export default function HoursPage() {
 
   return (
     <div className="space-y-8">
+      {onboardingStatus?.tenantStatus !== 'READY' && (
+        <div>
+          <Link to={ROUTES.TENANT.ONBOARDING}>
+            <Button variant="ghost" className="px-0">Back to onboarding</Button>
+          </Link>
+        </div>
+      )}
       <div>
         <h1 className="text-2xl font-display font-bold">{t('hours.title')}</h1>
         <p className="text-muted-foreground">{t('hours.subtitle')}</p>

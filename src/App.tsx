@@ -10,6 +10,7 @@ import LandingLayout from "@/layouts/LandingLayout";
 import TenantLayout from "@/layouts/TenantLayout";
 import PlatformLayout from "@/layouts/PlatformLayout";
 import ProtectedRoute from "@/components/organisms/ProtectedRoute";
+import TenantOnboardingGuard from "@/components/organisms/TenantOnboardingGuard";
 
 // Public pages
 import LandingPage from "@/pages/LandingPage";
@@ -64,18 +65,20 @@ const App = () => (
 
             {/* Tenant */}
             <Route element={<ProtectedRoute allowedRoles={['OWNER', 'ADMIN', 'STAFF']} />}>
-              <Route element={<TenantLayout />}>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/onboarding" element={<OnboardingPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/hours" element={<HoursPage />} />
-                <Route path="/bookings" element={<BookingsPage />} />
-                <Route path="/clients" element={<ClientsPage />} />
-                <Route path="/notifications" element={<NotificationsPage />} />
-                <Route path="/branding" element={<BrandingPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/team" element={<TeamPage />} />
-                <Route path="/whatsapp/setup" element={<WhatsAppSetupPage />} />
+              <Route element={<TenantOnboardingGuard />}>
+                <Route element={<TenantLayout />}>
+                  <Route path="/dashboard" element={<DashboardPage />} />
+                  <Route path="/onboarding" element={<OnboardingPage />} />
+                  <Route path="/services" element={<ServicesPage />} />
+                  <Route path="/hours" element={<HoursPage />} />
+                  <Route path="/bookings" element={<BookingsPage />} />
+                  <Route path="/clients" element={<ClientsPage />} />
+                  <Route path="/notifications" element={<NotificationsPage />} />
+                  <Route path="/branding" element={<BrandingPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/team" element={<TeamPage />} />
+                  <Route path="/whatsapp/setup" element={<WhatsAppSetupPage />} />
+                </Route>
               </Route>
             </Route>
 

@@ -1,16 +1,16 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@/types';
+import type { TenantStatus, User } from '@/types';
 
 interface AuthState {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
-  onboardingComplete: boolean;
+  tenantStatus: TenantStatus | null;
   login: (user: User, accessToken: string, refreshToken: string) => void;
   setTokens: (accessToken: string, refreshToken: string) => void;
-  completeOnboarding: () => void;
+  setTenantStatus: (tenantStatus: TenantStatus | null) => void;
   logout: () => void;
 }
 
@@ -21,19 +21,19 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
-      onboardingComplete: false,
+      tenantStatus: null,
 
       login: (user, accessToken, refreshToken) =>
-        set({ user, accessToken, refreshToken, isAuthenticated: true }),
+        set({ user, accessToken, refreshToken, isAuthenticated: true, tenantStatus: null }),
 
       setTokens: (accessToken, refreshToken) =>
         set({ accessToken, refreshToken }),
 
-      completeOnboarding: () =>
-        set({ onboardingComplete: true }),
+      setTenantStatus: (tenantStatus) =>
+        set({ tenantStatus }),
 
       logout: () =>
-        set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false, onboardingComplete: false }),
+        set({ user: null, accessToken: null, refreshToken: null, isAuthenticated: false, tenantStatus: null }),
     }),
     {
       name: 'ventry-auth',
@@ -42,7 +42,7 @@ export const useAuthStore = create<AuthState>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
-        onboardingComplete: state.onboardingComplete,
+        tenantStatus: state.tenantStatus,
       }),
     },
   ),
