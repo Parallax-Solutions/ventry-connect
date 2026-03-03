@@ -10,6 +10,8 @@ export interface User {
   scope: UserScope;
   status: UserStatus;
   tenantId: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface LoginRequest {

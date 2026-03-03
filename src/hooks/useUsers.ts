@@ -1,14 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { usersApi } from '@/api/users';
 import { useToast } from '@/hooks/use-toast';
+import { getErrorMessage } from '@/lib/api-errors';
 import type { CreatePlatformUserRequest, CreateTenantUserRequest } from '@/types';
 
-const USERS_KEY = ['users'] as const;
+const TENANT_USERS_KEY = ['users', 'tenant'] as const;
+const PLATFORM_USERS_KEY = ['users', 'platform'] as const;
 
 export function useUsers() {
   return useQuery({
-    queryKey: USERS_KEY,
+    queryKey: TENANT_USERS_KEY,
     queryFn: usersApi.getAll,
+  });
+}
+
+export function usePlatformUsers() {
+  return useQuery({
+    queryKey: PLATFORM_USERS_KEY,
+    queryFn: usersApi.getPlatformUsers,
   });
 }
 
@@ -19,8 +28,15 @@ export function useCreatePlatformUser() {
   return useMutation({
     mutationFn: (data: CreatePlatformUserRequest) => usersApi.createPlatformUser(data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: USERS_KEY });
+      qc.invalidateQueries({ queryKey: PLATFORM_USERS_KEY });
       toast({ title: 'Platform user created successfully' });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Unable to create platform user',
+        description: getErrorMessage(error, 'Check the form and try again'),
+        variant: 'destructive',
+      });
     },
   });
 }
@@ -32,8 +48,15 @@ export function useCreateTenantUser() {
   return useMutation({
     mutationFn: (data: CreateTenantUserRequest) => usersApi.createTenantUser(data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: USERS_KEY });
+      qc.invalidateQueries({ queryKey: TENANT_USERS_KEY });
       toast({ title: 'Team member created successfully' });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Unable to create team member',
+        description: getErrorMessage(error, 'Check the form and try again'),
+        variant: 'destructive',
+      });
     },
   });
 }
